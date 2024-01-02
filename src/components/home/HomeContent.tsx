@@ -1,15 +1,16 @@
 // import Layout from "../../components/layout";
-import topTenMovie from "public/images/top10.png";
-import NSeries from "public/images/n-series.png";
-import PlaySvg from "public/icons/play.svg";
-import InfoImg from "public/images/info.png";
+import topTenMovie from "../../../public/images/top10.png";
+import NSeries from "../../../public/images/n-series.png";
+import PlaySvg from "../../../public/icons/play.svg";
+import InfoImg from "../../../public/images/info.png";
 import Image from "next/image";
 // import Popular from "../../components/home/popular";
 // import Footer from "../../components/layout/Footer";
-import React, { useEffect, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { clearInterval, setInterval } from "timers";
 
 import Popular from "./popular";
+import VideoPlayer from "./VideoPlayer";
 
 const mockData = [
   {
@@ -49,10 +50,13 @@ const mockItems = [
     src: "/images/main-bg.png",
   },
 ];
-
+export const fileName = "intro";
 const introMovie = mockData[0];
-const baseStaticPath = "http://localhost:3000/images/";
-export default function HomeContent({ bannerUri = baseStaticPath + "banner.jpg" }: any) {
+const baseStaticPath = "http://localhost:3001/images/";
+export default function HomeContent({
+  bannerUri = baseStaticPath + "banner.jpg",
+}: any) {
+  const videoRef = createRef();
   const [isVideo, setIsVideo] = useState(false);
 
   useEffect(() => {
@@ -64,43 +68,51 @@ export default function HomeContent({ bannerUri = baseStaticPath + "banner.jpg" 
     };
   }, [isVideo]);
 
-  const { isTop10, movieScene, ratingTitle, description, movieTitleLogo } = introMovie;
+  const { isTop10, movieScene, ratingTitle, description, movieTitleLogo } =
+    introMovie;
   return (
     <>
-      <div className={`font-netflix inline-block -z-10 absolute top-0 left-0`}>
+      <div className={`font-netflix absolute left-0 top-0 -z-10 inline-block`}>
         {bannerUri && (
           <img
             src={bannerUri}
             alt="background"
-            className={`-z-10  w-[100vw] object-cover animate-fade ${isVideo ? "opacity-0" : "opacity-100"}`}
+            className={`-z-10  w-[100vw] animate-fade object-cover ${
+              isVideo ? "opacity-0" : "opacity-100"
+            }`}
           />
         )}
         <div className="absolute bottom-0 left-0 h-[200px] w-full bg-linearGradient" />
-
-        <video
+        <VideoPlayer />
+        {/* <video
           loop
           autoPlay
           muted
-          src="/video/banner.mp4"
           poster="/images/main-bg-lg.png"
-          className="-z-20 absolute top-0 left-0 w-full object-cover"
-        ></video>
+          className="absolute left-0 top-0 -z-20 w-full object-cover"
+        >
+          <source
+            src={`/api/stream/${encodeURIComponent(fileName)}`}
+            type="video/mp4"
+          />
+          Your browser does not support the video tag.
+        </video>*/}
       </div>
 
-      <div className="pt-5 z-0 h-[400px] flex flex-col justify-center text-white">
+      <div className="z-0 flex h-[400px] flex-col justify-center pt-5 text-white">
         <img
           src={movieTitleLogo}
           alt="movie-title"
-          className={`min-w-[250px] max-w-[600px] w-[50%] mb-6 mt-[80px] md:mt-2 ${
+          className={`mb-6 mt-[80px] w-[50%] min-w-[250px] max-w-[600px] md:mt-2 ${
             isVideo ? "reduce-size" : "recover-size"
           }`}
         />
         <div
-          className={`transition duration-300 delay-700 ${
+          className={`transition delay-700 duration-300 ${
             isVideo ? "animate-fade opacity-0" : "animate-fadeIn opacity-1"
           }`}
         >
-          <div className="flex gap-2 text-white mb-6">
+          <div className="mb-6 flex gap-2 text-white">
             {isTop10 && <Image src={topTenMovie} alt="top movie" width="25" />}
             <p className="font-netflixMedium text-xl">{ratingTitle}</p>
           </div>
@@ -108,11 +120,11 @@ export default function HomeContent({ bannerUri = baseStaticPath + "banner.jpg" 
         </div>
 
         <div className="mt-3 flex gap-2 font-semibold">
-          <div className="bg-white flex gap-3 items-center text-black px-[20px] py-[5px]  text-lg rounded-sm cursor-pointer hover:animate-pulse">
+          <div className="flex cursor-pointer items-center gap-3 rounded-sm bg-white px-[20px]  py-[5px] text-lg text-black hover:animate-pulse">
             <Image src={PlaySvg} alt="play" width="15" />
             <span>Play</span>
           </div>
-          <div className="flex gap-3 items-center bg-slate-500 text-white px-[25px] py-[5px] text-sm rounded-sm cursor-pointer hover:animate-pulse">
+          <div className="flex cursor-pointer items-center gap-3 rounded-sm bg-slate-500 px-[25px] py-[5px] text-sm text-white hover:animate-pulse">
             <Image src={InfoImg} alt="info" width="20" />
             <span>More Info</span>
           </div>

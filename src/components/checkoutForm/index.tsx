@@ -6,37 +6,52 @@
 // );
 
 import React, { FC, useState } from "react";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import {
+  CardElement,
+  useStripe,
+  useElements,
+  PaymentElement,
+} from "@stripe/react-stripe-js";
+import { fetcher } from "../../services/fetcher";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
-const CheckoutForm: FC<{ onSubmit: any }> = ({ onSubmit }) => {
+const CheckoutForm: FC<{ clientSecret: string }> = ({ clientSecret }) => {
+  const token = useSelector((state: RootState) => state.cart.orderToken);
   const stripe = useStripe();
   const elements = useElements();
-  const [clientSecret, setClientSecret] = useState("");
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
 
-    onSubmit();
+    const isValidForm = elements?.getElement(PaymentElement);
+    if (!stripe || !elements || !isValidForm || !token) return;
 
-    const card = elements?.getElement(CardElement);
-    if (!stripe || !elements || !card) return;
-    const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card,
+    const return_url = `http://localhost:3000/confirmOrder?token=${token}`;
+    console.log(return_url);
+    const result = await stripe.confirmPayment({
+      //`Elements` instance that was used to create the Payment Element
+      elements,
+      confirmParams: {
+        return_url,
       },
     });
 
-    if (error) {
-      console.error(error.message);
-    } else if (paymentIntent.status === "succeeded") {
+    if (result.error) {
+      console.error(result.error.message);
+    } else {
       console.log("Payment succeeded!");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement />
-      <button type="submit" disabled={!stripe}>
+    <form onSubmit={handleSubmit} style={{ color: "#fff" }}>
+      <PaymentElement />
+      <button
+        type="submit"
+        disabled={!stripe}
+        className="border-1 mx-auto mt-3 w-full rounded-md border border-white px-5 py-2 font-bold hover:bg-white hover:text-gray-800"
+      >
         Pay
       </button>
     </form>

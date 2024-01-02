@@ -1,11 +1,19 @@
 import HomeContent from "../components/home/HomeContent";
-
-import banner from "../../public/images/main-bg.png";
-
+import Layout from "../components/layout";
+import LoginLayout from "../components/layout/LoginLayout";
+import Registration from "../features/auth/registration";
+const isAuth = false;
 export default function Home() {
+  if (isAuth) {
+    return (
+      <LoginLayout>
+        <Registration />
+      </LoginLayout>
+    );
+  }
   return (
-    <div className="flex text-3xl text-green-300">
+    <Layout>
       <HomeContent />
-    </div>
+    </Layout>
   );
 }

@@ -1,12 +1,15 @@
-import { api } from "../services/api";
+// import { api } from '../services/api';
 import { configureStore } from "@reduxjs/toolkit";
+import { cartSlice, userSlice } from "./redux.store";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      [api.reducerPath]: api.reducer,
+      cart: cartSlice.reducer,
+      user: userSlice.reducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(),
+    devTools: true,
   });
 };
 

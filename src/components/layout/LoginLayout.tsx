@@ -11,6 +11,7 @@ import StoreProvider from "../../StoreProvider";
 
 import localFont from "next/font/local";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import LoginMenu from "../../features/navigation/loginMenu";
 
 const netflixFont = localFont({
   src: [
@@ -23,11 +24,6 @@ const netflixFont = localFont({
       path: "../../../public/fonts/Netflix-Light.otf",
       weight: "300",
       style: "normal",
-    },
-    {
-      path: "../../../public/fonts/Netflix-Medium.otf",
-      weight: "500",
-      style: "semibold",
     },
   ],
   variable: "--font-netflix",
@@ -44,16 +40,14 @@ const queryClient = new QueryClient({
   },
 });
 
-const Layout: FC<IProps> = ({ children }) => {
+const LoginLayout: FC<IProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <StoreProvider>
         <div className={netflixFont.className}>
-          <div className="font-netflix flex flex-col text-white md:px-10 lg:px-[60px]">
-            <Menu />
+          <div className="font-netflix flex flex-col bg-white text-white ">
+            <LoginMenu />
             <div>{children}</div>
-
-            <Footer />
           </div>
         </div>
       </StoreProvider>
@@ -61,4 +55,4 @@ const Layout: FC<IProps> = ({ children }) => {
   );
 };
 
-export default Layout;
+export default LoginLayout;
