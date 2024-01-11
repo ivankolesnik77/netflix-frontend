@@ -1,5 +1,5 @@
-import axios, { AxiosInstance } from 'axios';
-import gql from 'graphql-tag';
+import axios, { AxiosInstance } from "axios";
+import gql from "graphql-tag";
 
 // class PaymentsService {
 //     instance: AxiosInstance | null = null;
@@ -29,7 +29,9 @@ export const BannerDocument = `
 `;
 
 export const PaymentIntentDocument = gql`
-    mutation CreatePaymentIntent($amount: Float!) {
-        createPaymentIntent(amount: $amount)
-    }
+  mutation CreatePaymentIntent($amount: Float!) {
+    createPaymentIntent(amount: $amount)
+  }
 `;
+
+export const BASE_URL = "https://localhost:3001/graphql";

@@ -6,10 +6,10 @@ import {
   setOrderToken,
 } from "../../../../../store/redux.store";
 import { fetcher } from "../../../../../services/fetcher";
-import gql from "graphql-tag";
+
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-
+import gql from "graphql-tag";
 export const mutation = gql`
   mutation CreateOrder($order: OrderInput!) {
     createOrder(order: $order) {

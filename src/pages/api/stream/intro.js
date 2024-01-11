@@ -1,8 +1,10 @@
 import fs from "fs";
 import path from "path";
+
 export const getVideoFilePath = (fileName) => {
   return `/${fileName}.mp4`;
 };
+
 export default async function handler(req, res) {
   const { fileName } = req.query;
   const filePath = getVideoFilePath(fileName);

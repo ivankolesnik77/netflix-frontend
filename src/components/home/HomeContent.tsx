@@ -11,6 +11,9 @@ import { clearInterval, setInterval } from "timers";
 
 import Popular from "./popular";
 import VideoPlayer from "./VideoPlayer";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import Registration from "../../features/auth/registration";
 
 const mockData = [
   {
@@ -55,7 +58,10 @@ const introMovie = mockData[0];
 const baseStaticPath = "http://localhost:3001/images/";
 export default function HomeContent({
   bannerUri = baseStaticPath + "banner.jpg",
+  videos,
+  paymentIntent,
 }: any) {
+  const isAuth = useSelector((state: RootState) => state.auth.isAuth);
   const videoRef = createRef();
   const [isVideo, setIsVideo] = useState(false);
 
@@ -70,9 +76,16 @@ export default function HomeContent({
 
   const { isTop10, movieScene, ratingTitle, description, movieTitleLogo } =
     introMovie;
+
+  if (!isAuth) {
+    return <Registration paymentIntent={paymentIntent} />;
+  }
+
   return (
     <>
-      <div className={`font-netflix absolute left-0 top-0 -z-10 inline-block`}>
+      <div
+        className={`font-netflix absolute -top-[60px] left-0 -z-10 inline-block`}
+      >
         {bannerUri && (
           <img
             src={bannerUri}
@@ -83,20 +96,21 @@ export default function HomeContent({
           />
         )}
         <div className="absolute bottom-0 left-0 h-[200px] w-full bg-linearGradient" />
-        <VideoPlayer />
-        {/* <video
+
+        <video
           loop
           autoPlay
           muted
+          controls
           poster="/images/main-bg-lg.png"
           className="absolute left-0 top-0 -z-20 w-full object-cover"
         >
           <source
-            src={`/api/stream/${encodeURIComponent(fileName)}`}
+            src={`http://localhost:3001/videoStream/intro.mp4`}
             type="video/mp4"
           />
           Your browser does not support the video tag.
-        </video>*/}
+        </video>
       </div>
 
       <div className="z-0 flex h-[400px] flex-col justify-center pt-5 text-white">

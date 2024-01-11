@@ -5,20 +5,51 @@
 //   "sk_test_51OJfncBX7glaLMPlZXighIdG9OwSr99B20L8BrKHrDkRdrdsRNVGNJpdnlY6BhUBoatkRPWB5MEsPWEqLvSNaO9000jCetdXjk",
 // );
 
-import React, { FC, useState } from "react";
+import React, { FC, createRef, useEffect, useRef, useState } from "react";
 import {
   CardElement,
   useStripe,
   useElements,
   PaymentElement,
+  CardCvcElement,
 } from "@stripe/react-stripe-js";
 import { fetcher } from "../../services/fetcher";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
-const CheckoutForm: FC<{ clientSecret: string }> = ({ clientSecret }) => {
+export type IPaymentIntent = { createPaymentIntent: string };
+const cardStyle = {
+  style: {
+    base: {
+      fontSize: "16px",
+      color: "#424770",
+      "::placeholder": {
+        color: "#aab7c4",
+      },
+    },
+    invalid: {
+      color: "#9e2146",
+    },
+  },
+
+  hidePostalCode: true, // Optionally hide the postal code field
+};
+
+const CheckoutForm: FC<IPaymentIntent> = ({ createPaymentIntent }) => {
   const token = useSelector((state: RootState) => state.cart.orderToken);
   const stripe = useStripe();
+  // const [cardElement, setCardElement] = useState<any>(null);
+  // const [cardElementContainer, setCardElementContainer] = useState<any>(null);
+
+  // useEffect(() => {
+  //   if (elements && !cardElement) {
+  //     const card = elements.create("card");
+  //     setCardElement(card);
+  //     card.mount(cardElementContainer);
+  //     console.log("Mounted card: ");
+  //   }
+  // }, [elements]);
+
   const elements = useElements();
 
   const handleSubmit = async (event: any) => {
@@ -46,7 +77,14 @@ const CheckoutForm: FC<{ clientSecret: string }> = ({ clientSecret }) => {
 
   return (
     <form onSubmit={handleSubmit} style={{ color: "#fff" }}>
-      <PaymentElement />
+      {/* <PaymentElement
+        {...cardStyle}
+        options={{ wallets: { applePay: undefined, googlePay: undefined } }}
+      /> */}
+      <CardElement />
+      <div className="flex gap-3">
+        <CardCvcElement />
+      </div>
       <button
         type="submit"
         disabled={!stripe}

@@ -7,10 +7,10 @@ import Footer from "./Footer";
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
 import { Provider, useDispatch, useSelector } from "react-redux";
 
-import StoreProvider from "../../StoreProvider";
+import StoreProvider from "../../store/StoreProvider";
 
 import localFont from "next/font/local";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import LoginMenu from "../../features/navigation/loginMenu";
 
 const netflixFont = localFont({
@@ -32,26 +32,17 @@ const netflixFont = localFont({
 interface IProps {
   children: React.ReactNode[] | React.ReactNode;
 }
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: Infinity,
-    },
-  },
-});
 
 const LoginLayout: FC<IProps> = ({ children }) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <StoreProvider>
-        <div className={netflixFont.className}>
-          <div className="font-netflix flex flex-col bg-white text-white ">
-            <LoginMenu />
-            <div>{children}</div>
-          </div>
+    <StoreProvider>
+      <div className={netflixFont.className}>
+        <div className="font-netflix flex flex-col bg-white text-white ">
+          <LoginMenu />
+          <div>{children}</div>
         </div>
-      </StoreProvider>
-    </QueryClientProvider>
+      </div>
+    </StoreProvider>
   );
 };
 

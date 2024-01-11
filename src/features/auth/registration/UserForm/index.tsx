@@ -11,7 +11,8 @@ const UserForm: FC<{ stage: RegistrationStage; handleSubmit: () => void }> = ({
         <div className="mt-[20px]" data-uia="header">
           <div className="stepHeader" role="status">
             <span id="" className="text-xs" data-uia="">
-              ШАГ 1 ИЗ 3
+              {" "}
+              ШАГ 1 ИЗ 3{" "}
             </span>
             <h1 className="text-3xl" data-uia="stepTitle">
               Создайте пароль, чтобы начать использовать подписку
@@ -19,14 +20,8 @@ const UserForm: FC<{ stage: RegistrationStage; handleSubmit: () => void }> = ({
           </div>
         </div>
         <div>
-          <div id="" className="contextRow" data-uia="contextRowDone">
-            Еще пару шагов, и всё готово!
-          </div>
-          <span id="" className="contextRow" data-uia="contextRowPaperWork">
-            Мы тоже не любим лишние документы.
-          </span>
           <div className=" flex max-w-md flex-col rounded-md  dark:text-gray-100 ">
-            <form action="" className="space-y-4" onSubmit={handleSubmit}>
+            <form action="" className="space-y-4">
               <div className="mt-3">
                 <div>
                   <label

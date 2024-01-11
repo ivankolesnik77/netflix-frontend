@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { RegistrationStage } from "..";
 
 const planOptions = [
@@ -46,7 +46,7 @@ const tableRows = [
     values: paymentTableRows.map((item) => item.monthlyPrice),
   },
   {
-    name: "Стоимость за месяц",
+    name: "Просмотр на телевизоре, компьютере, телефоне и планшете",
     values: Array.from({ length: 3 }),
   },
 ];
@@ -57,9 +57,17 @@ interface PaymentTableRow {
   resolution: string | number;
 }
 
-const ChoosePlan: FC<{ stage: RegistrationStage }> = ({ stage }) => {
+const activeBoxStyle =
+  "opacity-1  after:border-r-[10px] after:border-l-[10px] after:border-t-[10px] after:absolute after:inset-x-1/2 after:top-full after:block after:-translate-x-1/2 after:border-t after:border-solid after:border-t-red-600 after:border-transparent after:content-['']";
+
+const ChoosePlan: FC<{
+  stage: RegistrationStage;
+  handleSubmit: () => void;
+}> = ({ stage, handleSubmit }) => {
+  const [activePlanIndex, setActivePlanIndex] = useState(0);
+
   return (
-    <div className="mx-auto my-5 max-w-[600px]">
+    <div className="mx-auto my-5 max-w-[978px]">
       <a className="planFormContainer" data-uia="form-plan-selection">
         <div>
           <div className="stepHeader-container" data-uia="header">
@@ -72,7 +80,7 @@ const ChoosePlan: FC<{ stage: RegistrationStage }> = ({ stage }) => {
               </h1>
             </div>
           </div>
-          <div className="changeAnytime">
+          <div className="my-3">
             <ul className="checkmark-group -compact" data-uia="checkmark-group">
               {planOptions.map((name, key) => (
                 <li
@@ -86,7 +94,7 @@ const ChoosePlan: FC<{ stage: RegistrationStage }> = ({ stage }) => {
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="checkmark-group--icon default-ltr-cache-4z3qvp e1svuwfo1"
+                    className="checkmark-group--icon default-ltr-cache-4z3qvp e1svuwfo1 "
                     data-name="Checkmark"
                     aria-hidden="true"
                   >
@@ -111,7 +119,7 @@ const ChoosePlan: FC<{ stage: RegistrationStage }> = ({ stage }) => {
         <div className="planGrid planGrid--has3Plans" data-uia="plan-grid">
           <div className="planGrid__header">
             <div
-              className="ml-auto w-[60%]"
+              className="ml-auto flex w-[60%] flex-row gap-3"
               role="radiogroup"
               aria-label="План"
               aria-describedby="planGrid_planChoice_description"
@@ -120,34 +128,32 @@ const ChoosePlan: FC<{ stage: RegistrationStage }> = ({ stage }) => {
               {paymentTableRows.map((item, key) => (
                 <label
                   key={`payment-plan-${key}`}
-                  className="h-[120px] w-[120px] bg-red-600 text-white "
+                  className="relative mx-auto w-1/3"
                   htmlFor="planGrid_planChoice_0"
                   data-uia="plan-grid-plan-selector+label-text_1_stream_name"
                 >
                   <input
                     type="radio"
                     name="planChoice"
-                    className="peer"
+                    className="absolute left-[50%] appearance-none"
                     id="planGrid_planChoice_0"
                     data-uia="plan-grid-plan-selector+input-text_1_stream_name"
                     value="314001031"
                   />
-                  <span className="">
-                    <span className="content-block transform-translate-x-n1/2 absolute left-1/2 top-full border-t-2 border-red-500 peer-checked:block " />
-                    {item.name}
+
+                  <span
+                    onClick={() => setActivePlanIndex(key)}
+                    className={`mx-auto flex h-[120px] w-[120px] items-center justify-center rounded-sm bg-red-600 p-4 text-center text-lg font-semibold text-white ${
+                      key == activePlanIndex ? activeBoxStyle : "opacity-60"
+                    } `}
+                  >
+                    {item.quality}
                   </span>
                 </label>
               ))}
             </div>
           </div>
-          <table
-            className="planGrid__featureTable"
-            role="table"
-            data-uia="plan-grid-feature-table"
-          >
-            <caption className="planGrid__featureTableCaption">
-              Планы Netflix
-            </caption>
+          <table role="table" className="my-5">
             <tbody
               className="planGrid__featureTableBody"
               data-uia="plan-grid-feature-table-body"
@@ -157,207 +163,53 @@ const ChoosePlan: FC<{ stage: RegistrationStage }> = ({ stage }) => {
                   <tr
                     key={`payment-plan-row-${key}`}
                     role="row"
-                    className="flex min-h-[60px] items-center"
+                    className="h-[60px] items-center border-b border-solid  border-b-gray-500"
                   >
                     <th
-                      className="planGrid__cell planGrid__featureCell"
+                      className="w-[40%]  px-3 py-2"
                       data-uia="plan-grid-feature-table-cell+planPrice-feature"
                       scope="row"
                     >
                       {row.name}
                     </th>
-                    {row.values.map((item, key) => (
-                      <td
-                        className="planGrid__cell planGrid__stringCell"
-                        role="cell"
-                        data-uia="plan-grid-feature-table-cell+planPrice-text_1_stream_name"
-                      >
-                        {item}
-                      </td>
-                    ))}
-                    <td
-                      className="planGrid__cell planGrid__stringCell"
-                      role="cell"
-                      data-uia="plan-grid-feature-table-cell+planPrice-text_2_stream_name"
-                    >
-                      7,49 €
-                    </td>
-                    <td
-                      className="planGrid__cell planGrid__cell--isSelected planGrid__stringCell"
-                      role="cell"
-                      data-uia="plan-grid-feature-table-cell+planPrice-text_4_stream_name"
-                    >
-                      9,99 €
-                    </td>
+                    {row.values.map((item, key) => {
+                      const content = item ?? (
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="checkmark-group--icon default-ltr-cache-4z3qvp e1svuwfo1 mx-auto block"
+                          data-name="Checkmark"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
+                            fill="currentColor"
+                          ></path>
+                        </svg>
+                      );
+                      return (
+                        <td
+                          className=" px-3 py-2 text-center font-semibold text-red-600"
+                          role="cell"
+                          data-uia="plan-grid-feature-table-cell+planPrice-text_1_stream_name"
+                        >
+                          {/* @ts-ignore */}
+                          {content}
+                        </td>
+                      );
+                    })}
                   </tr>
                 );
               })}
-
-              <tr
-                role="row"
-                className="planGrid__featureTableRow planGrid__featureTableRow--videoQuality"
-              >
-                <th
-                  className="planGrid__cell planGrid__featureCell"
-                  data-uia="plan-grid-feature-table-cell+videoQuality-feature"
-                  scope="row"
-                >
-                  Качество видео
-                </th>
-                <td
-                  className="planGrid__cell planGrid__videoQualityCell"
-                  role="cell"
-                  data-uia="plan-grid-feature-table-cell+videoQuality-text_1_stream_name"
-                >
-                  <div className="planGrid__videoQualityLabel">Хорошее</div>
-                </td>
-                <td
-                  className="planGrid__cell planGrid__videoQualityCell"
-                  role="cell"
-                  data-uia="plan-grid-feature-table-cell+videoQuality-text_2_stream_name"
-                >
-                  <div className="planGrid__videoQualityLabel">
-                    Очень хорошее
-                  </div>
-                </td>
-                <td
-                  className="planGrid__cell planGrid__cell--isSelected planGrid__videoQualityCell"
-                  role="cell"
-                  data-uia="plan-grid-feature-table-cell+videoQuality-text_4_stream_name"
-                >
-                  <div className="planGrid__videoQualityLabel">Лучшее</div>
-                </td>
-              </tr>
-              <tr
-                role="row"
-                className="planGrid__featureTableRow planGrid__featureTableRow--resolution"
-              >
-                <th
-                  className="planGrid__cell planGrid__featureCell"
-                  data-uia="plan-grid-feature-table-cell+resolution-feature"
-                  scope="row"
-                >
-                  Разрешение
-                </th>
-                <td
-                  className="planGrid__cell planGrid__videoQualityCell"
-                  role="cell"
-                  data-uia="plan-grid-feature-table-cell+resolution-text_1_stream_name"
-                >
-                  <div className="planGrid__videoQualityLabel">720p</div>
-                </td>
-                <td
-                  className="planGrid__cell planGrid__videoQualityCell"
-                  role="cell"
-                  data-uia="plan-grid-feature-table-cell+resolution-text_2_stream_name"
-                >
-                  <div className="planGrid__videoQualityLabel">1080p</div>
-                </td>
-                <td
-                  className="planGrid__cell planGrid__cell--isSelected planGrid__videoQualityCell"
-                  role="cell"
-                  data-uia="plan-grid-feature-table-cell+resolution-text_4_stream_name"
-                >
-                  <div className="planGrid__videoQualityLabel">4K+HDR</div>
-                </td>
-              </tr>
-              <tr
-                role="row"
-                className="planGrid__featureTableRow planGrid__featureTableRow--noField"
-              >
-                <th
-                  className="planGrid__cell planGrid__featureCell"
-                  data-uia="plan-grid-feature-table-cell+3-feature"
-                  scope="row"
-                >
-                  Просмотр на телевизоре, компьютере, телефоне и планшете
-                </th>
-                <td
-                  className="planGrid__cell planGrid__booleanCell"
-                  role="cell"
-                  data-uia="plan-grid-feature-table-cell+3-text_1_stream_name"
-                >
-                  <span className="planGrid__booleanLabel">Да</span>
-                  <span className="planGrid__booleanIcon" aria-hidden="true">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="planGrid__booleanGraphic planGrid__booleanGraphic--isCheck default-ltr-cache-4z3qvp e1svuwfo1"
-                      data-name="Checkmark"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                  </span>
-                </td>
-                <td
-                  className="planGrid__cell planGrid__booleanCell"
-                  role="cell"
-                  data-uia="plan-grid-feature-table-cell+3-text_2_stream_name"
-                >
-                  <span className="planGrid__booleanLabel">Да</span>
-                  <span className="planGrid__booleanIcon" aria-hidden="true">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="planGrid__booleanGraphic planGrid__booleanGraphic--isCheck default-ltr-cache-4z3qvp e1svuwfo1"
-                      data-name="Checkmark"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                  </span>
-                </td>
-                <td
-                  className="planGrid__cell planGrid__cell--isSelected planGrid__booleanCell"
-                  role="cell"
-                  data-uia="plan-grid-feature-table-cell+3-text_4_stream_name"
-                >
-                  <span className="planGrid__booleanLabel">Да</span>
-                  <span className="planGrid__booleanIcon" aria-hidden="true">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="planGrid__booleanGraphic planGrid__booleanGraphic--isCheck default-ltr-cache-4z3qvp e1svuwfo1"
-                      data-name="Checkmark"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                  </span>
-                </td>
-              </tr>
             </tbody>
           </table>
-          <div>
-            <small className="planGrid__disclaimer planGrid__standardDisclaimer">
+          <div className="text-[#737373]">
+            <small className="block">
               <span id="" data-uia="plan-grid-legal">
                 Доступность форматов HD (720p), Full HD (1080p), UltraHD (4K) и
                 HDR зависит от вашего подключения к интернету и возможностей
@@ -366,13 +218,14 @@ const ChoosePlan: FC<{ stage: RegistrationStage }> = ({ stage }) => {
                 <a
                   href="https://help.netflix.com/legal/termsofuse"
                   target="_blank"
+                  className="ml-1 text-[#0071eb]"
                 >
                   Правилах использования
                 </a>
                 .
               </span>
             </small>
-            <small className="planGrid__disclaimer planGrid__standardDisclaimer">
+            <small className="mt-[10px] block">
               <span id="" data-uia="plan-grid-legal">
                 Вашим аккаунтом могут пользоваться только те, кто живет с вами.
                 Смотрите Netflix одновременно на 4 разных устройствах с планом
@@ -380,6 +233,13 @@ const ChoosePlan: FC<{ stage: RegistrationStage }> = ({ stage }) => {
               </span>
             </small>
           </div>
+          <button
+            onClick={handleSubmit}
+            type="button"
+            className="mt-5 w-full rounded-md bg-red-600 px-8 py-3 font-semibold text-white"
+          >
+            Далее
+          </button>
         </div>
       </a>
     </div>

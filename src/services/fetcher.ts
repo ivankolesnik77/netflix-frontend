@@ -4,7 +4,7 @@ const graphqlEndpoint = "http://localhost:3001/graphql";
 
 export const fetcher = async (
   query: ASTNode,
-  variables: Record<string, any>,
+  variables?: Record<string, any>,
 ) => {
   try {
     const res = await fetch(graphqlEndpoint, {

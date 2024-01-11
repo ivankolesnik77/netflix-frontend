@@ -30,6 +30,11 @@ const config: Config = {
         scroll: "scroll 40s linear infinite",
       },
 
+      boxShadow: {
+        field:
+          "0px 1px 1px rgba(0, 0, 0, 0.03), 0px 3px 6px rgba(0, 0, 0, 0.02), 0 0 0 3px hsla(210, 96%, 45%, 25%) , 0 1px 1px 0 rgba(0, 0, 0, 0.08)",
+      },
+
       keyframes: (theme) => ({
         fadeOut: {
           "0%": { opacity: "1" },

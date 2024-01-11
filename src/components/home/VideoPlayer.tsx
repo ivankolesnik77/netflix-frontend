@@ -1,72 +1,52 @@
-// VideoPlayer.js
 import React, { useEffect, useRef, useState } from "react";
+import ReactPlayer from "react-player";
 
-const VideoPlayer = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [loadedBlobs, setLoadedBlobs] = useState<Blob[]>([]);
-  const [currentTime, setCurrentTime] = useState(0);
+interface VideoPlayerProps {}
 
-  const fetchSlice = (start: number, end: number) => {
-    const headers = new Headers();
-    headers.append("Range", `bytes=${start}-${end}`);
+const VideoPlayer: React.FC<VideoPlayerProps> = () => {
+  const [src, setSrc] = useState("");
+  // useEffect(() => {
+  //   const fetchVideo = async () => {
+  //     const rangeHeader = "bytes=0-999"; // Set your desired byte range
+  //     const videoUrl = "http://localhost:3001/videoStream/test.mp4";
 
-    return fetch("http://localhost:3001/videos/intro.mp4", {
-      headers,
-    })
-      .then((response) => response.blob())
-      .catch((error) => {
-        console.error("Error fetching video slice:", error);
-      });
-  };
+  //     try {
+  //       const response = await fetch(videoUrl, {
+  //         headers: {
+  //           Range: rangeHeader,
+  //         },
+  //       });
 
-  const loadNextSlice = async () => {
-    const startTime = currentTime;
-    const endTime = Math.min(currentTime + 5, 25);
-    setCurrentTime(endTime);
+  //       if (response.ok) {
+  //         const blob = await response.blob();
+  //         const videoBlobUrl = URL.createObjectURL(blob);
 
-    const blob = await fetchSlice(startTime, 5);
-    const arrayBuffer = await fetchSlice(startTime, endTime);
-    const sourceBuffer = mediaSourceRef.current.addSourceBuffer("video/mp4");
-    sourceBuffer.appendBuffer(arrayBuffer);
-    // @ts-ignore
-    setLoadedBlobs((prevBlobs) => [...prevBlobs, blob]);
+  //         // Use videoBlobUrl in your video player
+  //         setSrc(videoBlobUrl);
+  //       } else {
+  //         console.error(
+  //           "Failed to fetch video:",
+  //           response.status,
+  //           response.statusText,
+  //         );
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching video:", error);
+  //     }
+  //   };
 
-    // Load the next chunk immediately
-    if (currentTime < 25) {
-      //   loadNextSlice();
-    }
-  };
+  //   // Call the function to fetch the video
+  //   fetchVideo();
+  // }, []);
 
-  useEffect(() => {
-    if (videoRef.current)
-      // Start loading chunks when the component mounts
-      loadNextSlice();
-  }, [videoRef]); // Run once when the component mounts
-
-  useEffect(() => {
-    console.log(currentTime, videoRef.current!.duration);
-    // When all slices are loaded, concatenate Blobs and create video URL
-    if (loadedBlobs.length == 1) {
-      const videoBlob = new Blob(loadedBlobs, { type: "video/mp4" });
-      const videoUrl = URL.createObjectURL(videoBlob);
-
-      if (videoRef.current) {
-        videoRef.current.src = videoUrl;
-        videoRef.current.load();
-      }
-    }
-  }, [loadedBlobs, currentTime]);
-  const handlePlay = () => {
-    if (videoRef.current) {
-      videoRef.current.play();
-    }
-  };
   return (
     <div>
-      <video ref={videoRef} controls width="600">
-        <source src=""></source>
+      <video width={"100%"} height="100%" controls autoPlay>
+        <source
+          src={"http://localhost:3001/videoStream/test.mp4"}
+          type="video/mp4"
+        ></source>
       </video>
-      <button onClick={handlePlay}>Play Video</button>
     </div>
   );
 };
