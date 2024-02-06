@@ -1,13 +1,34 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { RegistrationStage } from "..";
 import Payments from "../../../../pages/payments";
 import { IPaymentIntent } from "../../../../components/checkoutForm";
+import { useMutation } from "@apollo/client";
+import { PaymentIntentDocument } from "../../../../services/api";
+import { setOrderToken } from "../../../../store/redux.store";
+import { useDispatch } from "react-redux";
+import { gql } from "@apollo/client";
+const subscriptionPrice = 300;
 
 const PaymentForm: FC<{
-  paymentIntent: IPaymentIntent;
+  // paymentIntent: IPaymentIntent;
   stage: RegistrationStage;
   handleSubmit: () => void;
-}> = ({ stage, handleSubmit, paymentIntent }) => {
+}> = ({ stage, handleSubmit }) => {
+  const dispatch = useDispatch();
+  const [createPaymentIntent, { data }] = useMutation(PaymentIntentDocument, {
+    variables: { amount: subscriptionPrice },
+  });
+
+  useEffect(() => {
+    const getRequestPaymentIntent = async () => {
+      const paymentToken: any = await createPaymentIntent();
+      console.log(paymentToken.data);
+      dispatch(setOrderToken(paymentToken.data.paymentIntent.clientSecret));
+    };
+
+    getRequestPaymentIntent();
+  }, []);
+
   return (
     <div className=" mx-auto w-[400px]  max-w-sm">
       <div className="mt-[20px]" data-uia="header">
@@ -39,7 +60,7 @@ const PaymentForm: FC<{
           />
         </span>
       </div>
-      <Payments paymentIntent={paymentIntent} />
+      <Payments />
       <small>
         <span className="mt-3 text-gray-500">
           Устанавливая флажок ниже, вы соглашаетесь с Правилами использования и

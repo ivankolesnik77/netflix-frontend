@@ -5,13 +5,13 @@ const slideWidth = 240;
 const gapWidth = 5;
 
 export const DefaultCarousel = ({ children, isUpdate }: any) => {
-  const slider = useRef(null);
+  const slider = useRef<HTMLDivElement>(null);
   const isDown = useRef(false);
-  const startX = useRef(null);
-  const scrollLeft = useRef(null);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   useEffect(() => {
-    if (isUpdate) {
+    if (isUpdate && slider.current) {
       slider.current.scrollLeft += slideWidth + gapWidth;
     }
   }, [isUpdate]);
@@ -33,10 +33,11 @@ export const DefaultCarousel = ({ children, isUpdate }: any) => {
     }
   }, []);
 
-  function onMouseClick(e) {
+  function onMouseClick(e: any) {
+    if (!slider.current) return;
     isDown.current = true;
-    startX.current = e.pageX - slider.current.offsetLeft;
-    scrollLeft.current = slider.current.scrollLeft;
+    setStartX(e.pageX - slider.current.offsetLeft);
+    setScrollLeft(slider.current.scrollLeft);
   }
 
   function onMouseLeave() {
@@ -47,18 +48,18 @@ export const DefaultCarousel = ({ children, isUpdate }: any) => {
     isDown.current = false;
   }
 
-  function onMouseMove(e) {
-    if (!isDown.current) return;
+  function onMouseMove(e: any) {
+    if (!isDown.current || !slider.current) return;
     e.preventDefault();
     const x = e.pageX - slider.current.offsetLeft;
-    const walk = x - startX.current;
-    console.log(scrollLeft.current - walk);
-    slider.current.scrollLeft = scrollLeft.current - walk;
+    const walk = x - startX;
+    console.log(scrollLeft - walk);
+    slider.current.scrollLeft = scrollLeft - walk;
   }
 
   return (
     <div
-      className="scroll-smooth max-w-[100vw] ml overflow-hidden relative w-[730px] overflow-x-scroll transition-all will-change-transform cursor-pointer grid grid-flow-col no-scrollbar gap-2"
+      className="ml no-scrollbar relative grid w-[730px] max-w-[100vw] cursor-pointer grid-flow-col gap-2 overflow-hidden overflow-x-scroll scroll-smooth transition-all will-change-transform"
       ref={slider}
     >
       {children}

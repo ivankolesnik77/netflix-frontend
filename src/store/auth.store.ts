@@ -2,6 +2,8 @@ import { PayloadAction, combineReducers, createSlice } from "@reduxjs/toolkit";
 
 interface IAuthSliceState {
   isAuth?: boolean;
+  email?: string;
+  password?: string;
   token?: string;
 }
 
@@ -11,10 +13,13 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: userInitialState,
   reducers: {
-    setAuth: (state, action: PayloadAction<IAuthSliceState>) => {
+    setAuth: (state) => {
       state.isAuth = true;
+    },
+    setPassword: (state, action: PayloadAction<string>) => {
+      state.password = action.payload;
     },
   },
 });
 
-export const { setAuth } = authSlice.actions;
+export const { setAuth, setPassword } = authSlice.actions;

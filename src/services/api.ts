@@ -1,5 +1,5 @@
+import { gql } from "@apollo/client";
 import axios, { AxiosInstance } from "axios";
-import gql from "graphql-tag";
 
 // class PaymentsService {
 //     instance: AxiosInstance | null = null;
@@ -30,7 +30,9 @@ export const BannerDocument = `
 
 export const PaymentIntentDocument = gql`
   mutation CreatePaymentIntent($amount: Float!) {
-    createPaymentIntent(amount: $amount)
+    paymentIntent(amount: $amount) {
+      clientSecret
+    }
   }
 `;
 

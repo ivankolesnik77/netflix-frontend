@@ -1,8 +1,8 @@
 import React from "react";
 
 import { fetcher } from "../../services/fetcher";
-import gql from "graphql-tag";
-
+import { gql } from "@apollo/client";
+import { apolloClient } from "..";
 type Repo = {
   confirmOrder: {
     message: string;
@@ -19,12 +19,18 @@ const CONFIRM_ORDER_MUTATION = gql`
 
 export const getServerSideProps = async (context: any) => {
   const token = context.query.token;
-  const res: Repo = await fetcher(CONFIRM_ORDER_MUTATION, { order: { token } });
+  const response: any = apolloClient.mutate({
+    mutation: CONFIRM_ORDER_MUTATION,
+    variables: { order: { token } },
+  });
 
-  return { props: { data: res.confirmOrder } };
+  return {
+    props: { data: JSON.parse(JSON.stringify(response)) },
+  };
 };
 
 export default function ConfirmOrder({ data }: any) {
+  console.log(data);
   if (!data?.message) return null;
 
   return (

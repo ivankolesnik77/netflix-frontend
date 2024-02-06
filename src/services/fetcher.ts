@@ -1,29 +1,23 @@
+import { TypedDocumentNode, gql } from "@apollo/client";
 import { ASTNode, print } from "graphql";
+import { apolloClient } from "../pages";
 
 const graphqlEndpoint = "http://localhost:3001/graphql";
 
 export const fetcher = async (
-  query: ASTNode,
+  query: TypedDocumentNode,
   variables?: Record<string, any>,
 ) => {
   try {
-    const res = await fetch(graphqlEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: print(query),
-        variables,
-      }),
+    const response: any = apolloClient.query({
+      query: query,
+      variables,
     });
-
-    const data = await res.json();
-
-    if (data.errors) {
-      console.log(data.errors[0].message);
+    console.log(response);
+    if (response.errors) {
+      console.log(response.errors[0].message);
     }
-    return data.data;
+    return response;
   } catch (err) {
     console.log(err);
     return {};

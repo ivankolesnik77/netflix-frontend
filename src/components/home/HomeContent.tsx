@@ -11,9 +11,12 @@ import { clearInterval, setInterval } from "timers";
 
 import Popular from "./popular";
 import VideoPlayer from "./VideoPlayer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import Registration from "../../features/auth/registration";
+import { useParams } from "next/navigation";
+import { setAuth } from "../../store/auth.store";
+import { useRouter } from "next/router";
 
 const mockData = [
   {
@@ -58,13 +61,14 @@ const introMovie = mockData[0];
 const baseStaticPath = "http://localhost:3001/images/";
 export default function HomeContent({
   bannerUri = baseStaticPath + "banner.jpg",
-  videos,
-  paymentIntent,
+  // paymentIntent,
 }: any) {
+  const router = useRouter();
+
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
   const videoRef = createRef();
   const [isVideo, setIsVideo] = useState(false);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     const timer = setInterval(() => {
       setIsVideo(!isVideo);
@@ -74,11 +78,18 @@ export default function HomeContent({
     };
   }, [isVideo]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(setAuth());
+    }
+  }, []);
+
   const { isTop10, movieScene, ratingTitle, description, movieTitleLogo } =
     introMovie;
 
   if (!isAuth) {
-    return <Registration paymentIntent={paymentIntent} />;
+    return <Registration />;
   }
 
   return (

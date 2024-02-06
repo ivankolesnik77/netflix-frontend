@@ -62,6 +62,13 @@ interface IUserSliceState {
   id?: number;
   email?: string;
   name?: string;
+  subscriptionType?: SubscriptionType;
+}
+
+export enum SubscriptionType {
+  Basic = "Basic",
+  Advanced = "Advanced",
+  Premium = "Premium",
 }
 
 const userInitialState: IUserSliceState = {};
@@ -71,7 +78,9 @@ export const userSlice = createSlice({
   initialState: userInitialState,
   reducers: {
     setUser: (state, action: PayloadAction<IUserSliceState>) => {
-      state = action.payload;
+      console.log(state, action.payload);
+      state = { ...state, ...action.payload };
+      return state;
     },
   },
 });

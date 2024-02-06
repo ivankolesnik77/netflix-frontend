@@ -1,6 +1,9 @@
 import React, { FC, useState } from "react";
 import { RegistrationStage } from "..";
-
+import { fetcher } from "../../../../services/fetcher";
+import { SubscriptionType, setOrderToken } from "../../../../store/redux.store";
+import { useDispatch } from "react-redux";
+import { gql } from "@apollo/client";
 const planOptions = [
   "Неограниченный просмотр. Без рекламы.",
   "Персональные рекомендации.",
@@ -62,13 +65,15 @@ const activeBoxStyle =
 
 const ChoosePlan: FC<{
   stage: RegistrationStage;
-  handleSubmit: () => void;
+  handleSubmit: (subscriptionType: SubscriptionType) => void;
 }> = ({ stage, handleSubmit }) => {
   const [activePlanIndex, setActivePlanIndex] = useState(0);
 
+
+
   return (
     <div className="mx-auto my-5 max-w-[978px]">
-      <a className="planFormContainer" data-uia="form-plan-selection">
+      <div className="planFormContainer" data-uia="form-plan-selection">
         <div>
           <div className="stepHeader-container" data-uia="header">
             <div className="stepHeader" role="status">
@@ -99,8 +104,8 @@ const ChoosePlan: FC<{
                     aria-hidden="true"
                   >
                     <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
                       d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
                       fill="currentColor"
                     ></path>
@@ -185,8 +190,8 @@ const ChoosePlan: FC<{
                           aria-hidden="true"
                         >
                           <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
                             d="M21.2928 4.29285L22.7071 5.70706L8.70706 19.7071C8.51952 19.8946 8.26517 20 7.99995 20C7.73474 20 7.48038 19.8946 7.29285 19.7071L0.292847 12.7071L1.70706 11.2928L7.99995 17.5857L21.2928 4.29285Z"
                             fill="currentColor"
                           ></path>
@@ -194,6 +199,7 @@ const ChoosePlan: FC<{
                       );
                       return (
                         <td
+                          key={`plan-variant-${key}`}
                           className=" px-3 py-2 text-center font-semibold text-red-600"
                           role="cell"
                           data-uia="plan-grid-feature-table-cell+planPrice-text_1_stream_name"
@@ -234,14 +240,16 @@ const ChoosePlan: FC<{
             </small>
           </div>
           <button
-            onClick={handleSubmit}
+            onClick={() =>
+              handleSubmit(Object.values(SubscriptionType)[activePlanIndex])
+            }
             type="button"
             className="mt-5 w-full rounded-md bg-red-600 px-8 py-3 font-semibold text-white"
           >
             Далее
           </button>
         </div>
-      </a>
+      </div>
     </div>
   );
 };

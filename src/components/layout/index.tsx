@@ -40,10 +40,11 @@ interface IProps {
 
 const Layout: FC<IProps> = ({ children }) => {
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
+  console.log(isAuth);
   if (!isAuth) {
     return <LoginLayout>{children}</LoginLayout>;
   }
-  console.log(isAuth);
+
   return (
     <div className={netflixFont.className}>
       <div className="font-netflix flex flex-col text-white md:px-10 lg:px-[60px]">

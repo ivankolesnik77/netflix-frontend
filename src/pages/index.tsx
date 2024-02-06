@@ -17,35 +17,28 @@ import {
 } from "@apollo/client";
 import { fetcher } from "../services/fetcher";
 import StoreProvider from "../store/StoreProvider";
-
-const client = new ApolloClient({
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+import { __DEV__ } from "@apollo/client/utilities/globals";
+import { addApolloState, initializeApollo } from "../lib/apoloClient";
+import { StripeProvider } from "react-stripe-elements";
+import { STRIPE_PUBLIC_KEY } from "@env";
+export const apolloClient = new ApolloClient({
   uri: "http://localhost:3001/graphql/",
   cache: new InMemoryCache(),
 });
 
-const INTRO_VIDEO = gql`
-  query Video {
-    videos {
-      id
-      file
-      title
-    }
-  }
-`;
-
-export const getServerSideProps = async () => {
-  const videoResponse = await fetcher(INTRO_VIDEO);
-  const paymentIntent = await fetcher(PaymentIntentDocument, { amount: 500 });
-  return { props: { videos: videoResponse.videos, paymentIntent } };
-};
+loadDevMessages();
+loadErrorMessages();
 
 export default function Home(props: any) {
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apolloClient}>
       <StoreProvider>
-        <Layout>
-          <HomeContent {...props} />
-        </Layout>
+        <StripeProvider stripe={STRIPE_PUBLIC_KEY}>
+          <Layout>
+            <HomeContent />
+          </Layout>
+        </StripeProvider>
       </StoreProvider>
     </ApolloProvider>
   );

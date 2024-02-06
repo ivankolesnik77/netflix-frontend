@@ -69,7 +69,10 @@ export const Cart = () => {
   return (
     <div className="transition-max-height animate-fadeSize absolute right-[50px] top-[60px] min-h-[120px] w-[200px] overflow-hidden rounded-sm bg-white p-3 shadow duration-500 ease-in-out">
       {products.map((item) => (
-        <div key={item.id} className="flex max-w-[200px] flex-col text-black">
+        <div
+          key={`product-item-${item.id}`}
+          className="flex max-w-[200px] flex-col text-black"
+        >
           <h3 className="mb-1 font-semibold">{item.title}</h3>
           <div className="flex flex-row items-center justify-between  gap-2">
             <p>{item.category}</p>

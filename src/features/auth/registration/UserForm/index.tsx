@@ -1,18 +1,29 @@
-import React, { FC } from "react";
+import React, { ChangeEvent, FC, useState } from "react";
 import { RegistrationStage } from "..";
 
-const UserForm: FC<{ stage: RegistrationStage; handleSubmit: () => void }> = ({
-  stage,
-  handleSubmit,
-}) => {
+export type AuthDataType = {
+  password: string;
+  email: string;
+};
+
+const UserForm: FC<{
+  stage: RegistrationStage;
+  handleSubmit: (data: AuthDataType) => void;
+}> = ({ stage, handleSubmit }) => {
+  const [authData, setAuthData] = useState({ password: "", email: "" });
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.getAttribute("name");
+    name && setAuthData({ ...authData, [name]: e.target.value });
+  };
+
   return (
     <div className=" mx-auto w-[400px]  max-w-sm" data-uia="form-registration">
       <div>
         <div className="mt-[20px]" data-uia="header">
           <div className="stepHeader" role="status">
             <span id="" className="text-xs" data-uia="">
-              {" "}
-              ШАГ 1 ИЗ 3{" "}
+              ШАГ 1 ИЗ 3
             </span>
             <h1 className="text-3xl" data-uia="stepTitle">
               Создайте пароль, чтобы начать использовать подписку
@@ -34,6 +45,8 @@ const UserForm: FC<{ stage: RegistrationStage; handleSubmit: () => void }> = ({
                     type="email"
                     name="email"
                     id="email"
+                    value={authData.email}
+                    onChange={handleChange}
                     placeholder="leroy@jenkins.com"
                     className="w-full  border px-3 py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                   />
@@ -47,6 +60,8 @@ const UserForm: FC<{ stage: RegistrationStage; handleSubmit: () => void }> = ({
                   <input
                     type="password"
                     name="password"
+                    value={authData.password}
+                    onChange={handleChange}
                     id="password"
                     placeholder="*****"
                     className="w-full  border px-3 py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
@@ -63,7 +78,7 @@ const UserForm: FC<{ stage: RegistrationStage; handleSubmit: () => void }> = ({
               <div className="space-y-2">
                 <div>
                   <button
-                    onClick={handleSubmit}
+                    onClick={() => handleSubmit(authData)}
                     type="button"
                     className="w-full rounded-md bg-red-600 px-8 py-3 font-semibold text-white"
                   >

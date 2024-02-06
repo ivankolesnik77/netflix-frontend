@@ -21,7 +21,7 @@ export const ProductsDocument = gql`
 
 export const getServerSideProps = async () => {
   const data = await fetcher(ProductsDocument, { amount: 500 });
-  console.log(data);
+
   return { props: { data: data || { products: [] } } };
 };
 
@@ -38,7 +38,10 @@ const Products = ({ data }: { data: { products: any[] } }) => {
     <div className="mt-5 flex justify-center">
       <div className="grid w-full max-w-[800px] grid-cols-3 gap-2 gap-y-4 text-white">
         {data.products.map((item) => (
-          <div key={item.id} className="flex max-w-[150px] flex-col p-4 pt-2">
+          <div
+            key={`product-item-${item.id}`}
+            className="flex max-w-[150px] flex-col p-4 pt-2"
+          >
             <Image src={item?.image || ""} alt="" height={150} width={150} />
             <h3 className="my-1 h-10 font-semibold">{item.title}</h3>
             <div className="mt-2 flex flex-row items-center  justify-between gap-2 ">

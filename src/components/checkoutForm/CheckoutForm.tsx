@@ -9,14 +9,57 @@ import { RootState } from "../../store";
 import { BASE_URL } from "../../services/api";
 import { fetcher } from "../../services/fetcher";
 
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/redux.store";
+import { subscriptionRates } from "../../utils/constansts";
+import { setAuth } from "../../store/auth.store";
+
+const PAYMENT_CREDENTIALS = gql`
+  mutation createUser($user: CreateUserInput!) {
+    createUser(user: $user) {
+      id
+      email
+    }
+  }
+`;
+
+export const CreateSubscriptionDocument = gql`
+  mutation CreateSubscription($subscription: CreateSubscriptionInput!) {
+    createSubscription(subscription: $subscription) {
+      name
+      surname
+      subscriptionId
+      expiredAt
+      token
+    }
+  }
+`;
+
+type UserSubscription = {
+  name: string;
+  email: string;
+  surname: string;
+  subscriptionId: number;
+  expiredAt: Date;
+};
+
 export default function CheckoutForm({ clientSecret }: any) {
-  const token = useAppSelector((state: RootState) => state.cart.orderToken);
+  // const token = useAppSelector((state: RootState) => state.cart.orderToken);
+  const currentUser = useAppSelector((state: RootState) => state.user);
+  const auth = useAppSelector((state: RootState) => state.auth);
   const stripe = useStripe();
+  const dispatch = useDispatch();
   const elements = useElements();
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [createSubscription] = useMutation<UserSubscription>(
+    CreateSubscriptionDocument,
+  );
+  // const [mutate, data] = useMutation(PAYMENT_CREDENTIALS);
 
   useEffect(() => {
     if (!stripe) {
@@ -31,59 +74,79 @@ export default function CheckoutForm({ clientSecret }: any) {
       return;
     }
 
-    stripe
-      .retrievePaymentIntent(paymentIntentToken)
-      .then(({ paymentIntent }) => {
-        if (!paymentIntent) return;
-        switch (paymentIntent.status) {
-          case "succeeded":
-            setMessage("Payment succeeded!");
-            break;
-          case "processing":
-            setMessage("Your payment is processing.");
-            break;
-          case "requires_payment_method":
-            setMessage("Your payment was not successful, please try again.");
-            break;
-          default:
-            setMessage("Something went wrong.");
-            break;
-        }
-      });
+    try {
+      stripe
+        .retrievePaymentIntent(paymentIntentToken)
+        .then(({ paymentIntent }) => {
+          if (!paymentIntent) return;
+          switch (paymentIntent.status) {
+            case "succeeded":
+              setMessage("Payment succeeded!");
+              break;
+            case "processing":
+              setMessage("Your payment is processing.");
+              break;
+            case "requires_payment_method":
+              setMessage("Your payment was not successful, please try again.");
+              break;
+            default:
+              setMessage("Something went wrong.");
+              break;
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
   }, [stripe]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    if (!stripe || !elements) {
-      // Stripe.js hasn't yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
+    const { email, subscriptionType } = currentUser;
+    const subscriptionPrice =
+      subscriptionType && subscriptionRates[subscriptionType];
+    if (!stripe || !elements || !subscriptionPrice) {
       return;
     }
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `http://localhost:3000/confirmOrder?token=${token}`,
+    const data = await createSubscription({
+      variables: {
+        subscription: {
+          user: { email, name, surname, password: auth.password },
+          type: subscriptionType,
+          price: subscriptionPrice,
+        },
       },
     });
 
-    const { error } = await fetcher();
+    if (data.data) {
+      const { token, ...userPayload } = (data.data as any).createSubscription;
+      localStorage.setItem("token", token);
+      dispatch(setUser(userPayload));
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          payment_method_data: {
+            billing_details: {
+              address: {
+                country: "UK",
+              },
+            },
+          },
+          return_url: `http://localhost:3000`,
+        },
+      });
 
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
-    if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message || "");
-    } else {
-      setMessage("An unexpected error occurred.");
+      if (error.type === "card_error" || error.type === "validation_error") {
+        setMessage(error.message || "");
+      } else {
+        setMessage("An unexpected error occurred.");
+      }
+
+      setIsLoading(false);
     }
-
-    setIsLoading(true);
-    setIsLoading(false);
   };
+
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement
@@ -100,7 +163,7 @@ export default function CheckoutForm({ clientSecret }: any) {
           id="hs-floating-input-email"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="focus:shadow-field peer block w-full rounded-lg border border-solid  border-gray-200 p-4 text-sm outline-none placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-400 focus:pb-2 focus:pt-6
+          className="peer block w-full rounded-lg border border-solid border-gray-200  p-4 text-sm outline-none placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-400 focus:pb-2 focus:pt-6 focus:shadow-field
          focus:ring-blue-200 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2
             [&:not(:placeholder-shown)]:pt-6"
           placeholder="email@gmail.com"
@@ -123,7 +186,7 @@ export default function CheckoutForm({ clientSecret }: any) {
           value={surname}
           onChange={(e) => setSurname(e.target.value)}
           id="hs-floating-input-email"
-          className="focus:shadow-field peer block w-full rounded-lg border border-solid  border-gray-200 p-4 text-sm outline-none placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-400 focus:pb-2 focus:pt-6
+          className="peer block w-full rounded-lg border border-solid border-gray-200  p-4 text-sm outline-none placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-400 focus:pb-2 focus:pt-6 focus:shadow-field
          focus:ring-blue-200 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2
             [&:not(:placeholder-shown)]:pt-6"
           placeholder="email@gmail.com"
@@ -140,7 +203,11 @@ export default function CheckoutForm({ clientSecret }: any) {
           Фамилия
         </label>
       </div>
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+      <button
+        className="my-5 w-full rounded-md bg-red-600 px-8 py-3 font-semibold text-white"
+        disabled={isLoading || !stripe || !elements}
+        id="submit"
+      >
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>

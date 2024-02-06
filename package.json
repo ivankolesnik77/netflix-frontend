@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "local": "env-cmd -f environments/.env.local node server.js"
+    "local": "env-cmd -f environments/.env.local node server.js",
+    "compile": "graphql-codegen",
+    "watch": "graphql-codegen -w"
   },
   "dependencies": {
     "@apollo/client": "^3.8.9",
@@ -24,6 +26,7 @@
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
+    "lodash": "^4.17.21",
     "mamba-ui": "^0.0.7",
     "next": "14.0.4",
     "next-video": "^0.11.1",
@@ -34,6 +37,10 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@types/lodash": "^4.14.202",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

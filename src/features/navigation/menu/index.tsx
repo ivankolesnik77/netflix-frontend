@@ -29,7 +29,7 @@ const Menu = () => {
       />
       <ul className="align font-netflixLight flex grow whitespace-nowrap md:gap-3 lg:justify-center lg:gap-5">
         {menuItems.map((item, key) => (
-          <li key={key}>
+          <li key={`menu-item-${key}`}>
             <Link href={item.href}>{item.name}</Link>
           </li>
         ))}
