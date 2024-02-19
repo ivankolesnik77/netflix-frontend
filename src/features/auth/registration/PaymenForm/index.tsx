@@ -1,16 +1,16 @@
 import React, { FC, useEffect } from "react";
 import { RegistrationStage } from "..";
-import Payments from "../../../../pages/payments";
+
 import { IPaymentIntent } from "../../../../components/checkoutForm";
 import { useMutation } from "@apollo/client";
 import { PaymentIntentDocument } from "../../../../services/api";
-import { setOrderToken } from "../../../../store/redux.store";
+import { setPaymentCredentials } from "../../../../store/redux.store";
 import { useDispatch } from "react-redux";
 import { gql } from "@apollo/client";
+import { Payments } from "../../../payments";
 const subscriptionPrice = 300;
 
 const PaymentForm: FC<{
-  // paymentIntent: IPaymentIntent;
   stage: RegistrationStage;
   handleSubmit: () => void;
 }> = ({ stage, handleSubmit }) => {
@@ -21,9 +21,10 @@ const PaymentForm: FC<{
 
   useEffect(() => {
     const getRequestPaymentIntent = async () => {
-      const paymentToken: any = await createPaymentIntent();
-      console.log(paymentToken.data);
-      dispatch(setOrderToken(paymentToken.data.paymentIntent.clientSecret));
+      const paymentIntent: any = await createPaymentIntent();
+
+      const { clientSecret } = paymentIntent.data.paymentIntent;
+      dispatch(setPaymentCredentials({ clientSecret }));
     };
 
     getRequestPaymentIntent();

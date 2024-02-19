@@ -8,7 +8,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = () => {
   // useEffect(() => {
   //   const fetchVideo = async () => {
   //     const rangeHeader = "bytes=0-999"; // Set your desired byte range
-  //     const videoUrl = "http://localhost:3001/videoStream/test.mp4";
+  //     const videoUrl = "http://localhost:3002/videoStream/test.mp4";
 
   //     try {
   //       const response = await fetch(videoUrl, {
@@ -43,7 +43,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = () => {
     <div>
       <video width={"100%"} height="100%" controls autoPlay>
         <source
-          src={"http://localhost:3001/videoStream/test.mp4"}
+          src={"http://localhost:3002/videoStream/test.mp4"}
           type="video/mp4"
         ></source>
       </video>

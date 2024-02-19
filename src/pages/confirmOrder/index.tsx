@@ -30,7 +30,6 @@ export const getServerSideProps = async (context: any) => {
 };
 
 export default function ConfirmOrder({ data }: any) {
-  console.log(data);
   if (!data?.message) return null;
 
   return (

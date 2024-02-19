@@ -13,12 +13,14 @@ export interface ICartProduct extends IProduct {
 
 interface ICart {
   products: ICartProduct[];
-  orderToken: string | null;
+  clientSecret: string | null;
+  paymentMethod: string | null;
 }
 
 const initialState: ICart = {
   products: [],
-  orderToken: null,
+  clientSecret: null,
+  paymentMethod: null,
 };
 
 export const cartSlice = createSlice({
@@ -51,17 +53,18 @@ export const cartSlice = createSlice({
 
       sessionStorage.setItem("cart", JSON.stringify(state.products));
     },
-    setOrderToken: (state, action: PayloadAction<string>) => {
+    setPaymentCredentials: (state, action: PayloadAction<any>) => {
       console.log("token");
-      state.orderToken = action.payload;
+      return { ...state, clientSecret: action.payload.clientSecret };
     },
   },
 });
 
-interface IUserSliceState {
+export interface IUserSliceState {
   id?: number;
   email?: string;
   name?: string;
+  userName?: string;
   subscriptionType?: SubscriptionType;
 }
 
@@ -78,13 +81,16 @@ export const userSlice = createSlice({
   initialState: userInitialState,
   reducers: {
     setUser: (state, action: PayloadAction<IUserSliceState>) => {
-      console.log(state, action.payload);
       state = { ...state, ...action.payload };
       return state;
     },
   },
 });
 
-export const { initializeProducts, toggle, increaseCount, setOrderToken } =
-  cartSlice.actions;
+export const {
+  initializeProducts,
+  toggle,
+  increaseCount,
+  setPaymentCredentials,
+} = cartSlice.actions;
 export const { setUser } = userSlice.actions;

@@ -53,7 +53,7 @@ export const DefaultCarousel = ({ children, isUpdate }: any) => {
     e.preventDefault();
     const x = e.pageX - slider.current.offsetLeft;
     const walk = x - startX;
-    console.log(scrollLeft - walk);
+
     slider.current.scrollLeft = scrollLeft - walk;
   }
 

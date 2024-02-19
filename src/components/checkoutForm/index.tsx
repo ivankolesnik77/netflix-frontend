@@ -17,7 +17,7 @@ import { fetcher } from "../../services/fetcher";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
-export type IPaymentIntent = { createPaymentIntent: string };
+export type IPaymentIntent = { createPaymentIntent?: string };
 const cardStyle = {
   style: {
     base: {
@@ -35,8 +35,8 @@ const cardStyle = {
   hidePostalCode: true, // Optionally hide the postal code field
 };
 
-const CheckoutForm: FC<IPaymentIntent> = ({ createPaymentIntent }) => {
-  const token = useSelector((state: RootState) => state.cart.orderToken);
+const CheckoutForm: FC<IPaymentIntent> = () => {
+  const token = useSelector((state: RootState) => state.cart.clientSecret);
   const stripe = useStripe();
   // const [cardElement, setCardElement] = useState<any>(null);
   // const [cardElementContainer, setCardElementContainer] = useState<any>(null);
@@ -59,7 +59,7 @@ const CheckoutForm: FC<IPaymentIntent> = ({ createPaymentIntent }) => {
     if (!stripe || !elements || !isValidForm || !token) return;
 
     const return_url = `http://localhost:3000/confirmOrder?token=${token}`;
-    console.log(return_url);
+
     const result = await stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element
       elements,
@@ -77,14 +77,14 @@ const CheckoutForm: FC<IPaymentIntent> = ({ createPaymentIntent }) => {
 
   return (
     <form onSubmit={handleSubmit} style={{ color: "#fff" }}>
-      {/* <PaymentElement
+      <PaymentElement
         {...cardStyle}
         options={{ wallets: { applePay: undefined, googlePay: undefined } }}
-      /> */}
-      <CardElement />
+      />
+      {/* <CardElement />
       <div className="flex gap-3">
         <CardCvcElement />
-      </div>
+      </div> */}
       <button
         type="submit"
         disabled={!stripe}

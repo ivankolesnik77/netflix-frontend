@@ -17,7 +17,9 @@ import Registration from "../../features/auth/registration";
 import { useParams } from "next/navigation";
 import { setAuth } from "../../store/auth.store";
 import { useRouter } from "next/router";
-
+import { fetcher } from "../../services/fetcher";
+import { gql } from "@apollo/client";
+import { setUser } from "../../store/redux.store";
 const mockData = [
   {
     movieScene: "/images/main-bg.png",
@@ -56,9 +58,19 @@ const mockItems = [
     src: "/images/main-bg.png",
   },
 ];
+
+const VerifyTokenDocument = gql`
+  query VerifyToken($user: VerifyUserInput!) {
+    verifyToken(user: $user) {
+      email
+      userName
+    }
+  }
+`;
+
 export const fileName = "intro";
 const introMovie = mockData[0];
-const baseStaticPath = "http://localhost:3001/images/";
+const baseStaticPath = "http://localhost:3002/images/";
 export default function HomeContent({
   bannerUri = baseStaticPath + "banner.jpg",
   // paymentIntent,
@@ -66,7 +78,7 @@ export default function HomeContent({
   const router = useRouter();
 
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
-  const videoRef = createRef();
+
   const [isVideo, setIsVideo] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -79,10 +91,20 @@ export default function HomeContent({
   }, [isVideo]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      dispatch(setAuth());
-    }
+    const authUser = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const result = await fetcher(VerifyTokenDocument, { user: { token } });
+
+        if (result.data.verifyToken !== null) {
+          const user = result.data.verifyToken;
+          dispatch(setAuth());
+          dispatch(setUser({ email: user.email, userName: user.userName }));
+        }
+      }
+    };
+
+    authUser();
   }, []);
 
   const { isTop10, movieScene, ratingTitle, description, movieTitleLogo } =
@@ -117,7 +139,7 @@ export default function HomeContent({
           className="absolute left-0 top-0 -z-20 w-full object-cover"
         >
           <source
-            src={`http://localhost:3001/videoStream/intro.mp4`}
+            src={`http://localhost:3002/videoStream/intro.mp4`}
             type="video/mp4"
           />
           Your browser does not support the video tag.

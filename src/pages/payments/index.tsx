@@ -21,7 +21,7 @@ type Repo = {
   createPaymentIntent: string;
 };
 
-const graphqlEndpoint = "http://localhost:3001/graphql";
+const graphqlEndpoint = "http://localhost:3002/graphql";
 
 // export const getServerSideProps = async () => {
 //   const data: Repo = await fetcher(PaymentIntentDocument, { amount: 500 });
@@ -30,7 +30,7 @@ const graphqlEndpoint = "http://localhost:3001/graphql";
 // };
 
 export default function Payments() {
-  const token = useSelector((state: RootState) => state.cart.orderToken);
+  const cart = useSelector((state: RootState) => state.cart);
   const [stripeElements, setStripeElements] = useState<any>(null);
 
   useEffect(() => {
@@ -40,16 +40,16 @@ export default function Payments() {
     setStripeElements(stripePromise);
   }, []);
 
-  const options = useMemo(() => ({ clientSecret: token! }), [token]);
-
-  if (!token || !stripeElements) return null;
+  const options = useMemo(
+    () => ({ clientSecret: cart.clientSecret! }),
+    [cart.clientSecret],
+  );
+  console.log("token", cart);
+  if (!cart.clientSecret || !stripeElements) return null;
 
   return (
     <Elements stripe={stripeElements} options={options}>
-      <CheckoutForm
-        clientSecret={options.clientSecret}
-        // onSubmit={handleClick}
-      />
+      <CheckoutForm clientSecret={options.clientSecret} />
     </Elements>
   );
 }

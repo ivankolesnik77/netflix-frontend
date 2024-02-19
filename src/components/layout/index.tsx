@@ -40,7 +40,7 @@ interface IProps {
 
 const Layout: FC<IProps> = ({ children }) => {
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
-  console.log(isAuth);
+
   if (!isAuth) {
     return <LoginLayout>{children}</LoginLayout>;
   }

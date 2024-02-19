@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { RegistrationStage } from "..";
 import { fetcher } from "../../../../services/fetcher";
-import { SubscriptionType, setOrderToken } from "../../../../store/redux.store";
+import { SubscriptionType } from "../../../../store/redux.store";
 import { useDispatch } from "react-redux";
 import { gql } from "@apollo/client";
 const planOptions = [
@@ -68,8 +68,6 @@ const ChoosePlan: FC<{
   handleSubmit: (subscriptionType: SubscriptionType) => void;
 }> = ({ stage, handleSubmit }) => {
   const [activePlanIndex, setActivePlanIndex] = useState(0);
-
-
 
   return (
     <div className="mx-auto my-5 max-w-[978px]">

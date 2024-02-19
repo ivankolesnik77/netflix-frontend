@@ -2,7 +2,7 @@ import { TypedDocumentNode, gql } from "@apollo/client";
 import { ASTNode, print } from "graphql";
 import { apolloClient } from "../pages";
 
-const graphqlEndpoint = "http://localhost:3001/graphql";
+const graphqlEndpoint = "http://localhost:3002/graphql";
 
 export const fetcher = async (
   query: TypedDocumentNode,

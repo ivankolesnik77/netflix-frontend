@@ -3,7 +3,6 @@ import { RootState } from "../../../../../store";
 import {
   increaseCount,
   initializeProducts,
-  setOrderToken,
 } from "../../../../../store/redux.store";
 import { fetcher } from "../../../../../services/fetcher";
 
@@ -56,7 +55,7 @@ export const Cart = () => {
       const order = data?.createOrder;
 
       if (order.token) {
-        dispatch(setOrderToken(order.token));
+        // dispatch(setOrderToken(order.token));
         console.log("Created order: ", data);
 
         router.push(href);

@@ -3,6 +3,7 @@ import {
   PaymentElement,
   useStripe,
   useElements,
+  CardElement,
 } from "@stripe/react-stripe-js";
 import { useAppSelector } from "../../utils/hooks";
 import { RootState } from "../../store";
@@ -11,41 +12,44 @@ import { fetcher } from "../../services/fetcher";
 
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../store/redux.store";
+import { IUserSliceState, setUser } from "../../store/redux.store";
 import { subscriptionRates } from "../../utils/constansts";
-import { setAuth } from "../../store/auth.store";
 
-const PAYMENT_CREDENTIALS = gql`
-  mutation createUser($user: CreateUserInput!) {
-    createUser(user: $user) {
-      id
-      email
-    }
-  }
-`;
+import io, { Socket } from "socket.io-client";
+import { setAuth } from "../../store/auth.store";
+import { ErrorResponse, onError } from "@apollo/client/link/error";
+import { IPaySubscription } from "./types";
 
 export const CreateSubscriptionDocument = gql`
   mutation CreateSubscription($subscription: CreateSubscriptionInput!) {
     createSubscription(subscription: $subscription) {
-      name
-      surname
-      subscriptionId
-      expiredAt
       token
+      clientSecret
     }
   }
 `;
 
-type UserSubscription = {
-  name: string;
-  email: string;
-  surname: string;
-  subscriptionId: number;
-  expiredAt: Date;
+const cardPaymentOptions = {
+  style: {
+    base: {
+      fontSize: "16px",
+      color: "#000",
+      "::placeholder": {
+        color: "#aab7c4",
+      },
+    },
+    invalid: {
+      color: "#e53e3e",
+    },
+  },
 };
 
+let socket: Socket;
+
 export default function CheckoutForm({ clientSecret }: any) {
-  // const token = useAppSelector((state: RootState) => state.cart.orderToken);
+  const paymentMethod = useAppSelector(
+    (state: RootState) => state.cart.paymentMethod,
+  );
   const currentUser = useAppSelector((state: RootState) => state.user);
   const auth = useAppSelector((state: RootState) => state.auth);
   const stripe = useStripe();
@@ -53,111 +57,107 @@ export default function CheckoutForm({ clientSecret }: any) {
   const elements = useElements();
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
-  const [message, setMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const [createSubscription] = useMutation<UserSubscription>(
-    CreateSubscriptionDocument,
-  );
-  // const [mutate, data] = useMutation(PAYMENT_CREDENTIALS);
+  const [createSubscription] = useMutation<{
+    createSubscription: {
+      token: string;
+      clientSecret: string;
+    };
+  }>(CreateSubscriptionDocument, {
+    onError: (err: any) => {
+      console.log(err);
+    },
+  });
 
   useEffect(() => {
-    if (!stripe) {
-      return;
-    }
+    const runSocket = async () => {
+      await socketInitializer();
+    };
+    runSocket();
 
-    const paymentIntentToken = new URLSearchParams(window.location.search).get(
-      clientSecret,
-    );
+    return () => {
+      socket?.disconnect();
+    };
+  }, []);
 
-    if (!paymentIntentToken) {
-      return;
-    }
+  async function socketInitializer() {
+    const socket = io("http://localhost:8080");
 
-    try {
-      stripe
-        .retrievePaymentIntent(paymentIntentToken)
-        .then(({ paymentIntent }) => {
-          if (!paymentIntent) return;
-          switch (paymentIntent.status) {
-            case "succeeded":
-              setMessage("Payment succeeded!");
-              break;
-            case "processing":
-              setMessage("Your payment is processing.");
-              break;
-            case "requires_payment_method":
-              setMessage("Your payment was not successful, please try again.");
-              break;
-            default:
-              setMessage("Something went wrong.");
-              break;
-          }
-        });
-    } catch (err) {
-      console.log(err);
-    }
-  }, [stripe]);
+    await fetch("/api/socket");
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+    socket.on("connect", () => {
+      console.log("Connected to the server");
+    });
+  }
+
+  const paySubscription = async ({
+    currentUser,
+    paymentMethodId,
+  }: IPaySubscription) => {
+    if (!stripe) return;
 
     const { email, subscriptionType } = currentUser;
     const subscriptionPrice =
       subscriptionType && subscriptionRates[subscriptionType];
-    if (!stripe || !elements || !subscriptionPrice) {
+
+    const params = {
+      subscription: {
+        user: { email, name, surname, password: auth.password },
+        type: subscriptionType,
+        price: subscriptionPrice,
+        paymentMethod: paymentMethodId,
+      },
+    };
+    const { data } = await createSubscription({
+      variables: params,
+    });
+
+    if (data) {
+      const confirmPayment = await stripe.confirmCardPayment(
+        data?.createSubscription.clientSecret,
+      );
+      if (confirmPayment?.error) {
+        console.log(confirmPayment.error.message);
+      } else {
+        dispatch(setAuth());
+        localStorage.setItem("token", data.createSubscription.token);
+      }
+    }
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    const { subscriptionType } = currentUser;
+    if (!stripe || !elements || !subscriptionType) {
       return;
     }
 
-    const data = await createSubscription({
-      variables: {
-        subscription: {
-          user: { email, name, surname, password: auth.password },
-          type: subscriptionType,
-          price: subscriptionPrice,
-        },
+    const result = await stripe.createPaymentMethod({
+      type: "card",
+      card: elements?.getElement("card")!,
+      billing_details: {
+        name: name,
+        email: "stonebo0sh@gmail.com",
       },
     });
 
-    if (data.data) {
-      const { token, ...userPayload } = (data.data as any).createSubscription;
-      localStorage.setItem("token", token);
-      dispatch(setUser(userPayload));
-      const { error } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          payment_method_data: {
-            billing_details: {
-              address: {
-                country: "UK",
-              },
-            },
-          },
-          return_url: `http://localhost:3000`,
-        },
-      });
-
-      if (error.type === "card_error" || error.type === "validation_error") {
-        setMessage(error.message || "");
-      } else {
-        setMessage("An unexpected error occurred.");
-      }
-
-      setIsLoading(false);
+    if (result.error) {
+      console.log(result.error);
+      return;
     }
+
+    paySubscription({ currentUser, paymentMethodId: result.paymentMethod.id });
   };
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement
-        options={{
-          fields: {
-            billingDetails: { address: { country: "never" }, name: "auto" },
-          },
-        }}
+      <CardElement
+        options={cardPaymentOptions}
+        className="w-full rounded border border-gray-300 p-2"
       />
 
-      <div className="relative mb-3">
+      <div className="relative my-3">
         <input
           type="text"
           id="hs-floating-input-email"
@@ -205,15 +205,13 @@ export default function CheckoutForm({ clientSecret }: any) {
       </div>
       <button
         className="my-5 w-full rounded-md bg-red-600 px-8 py-3 font-semibold text-white"
-        disabled={isLoading || !stripe || !elements}
+        disabled={!stripe || !elements}
         id="submit"
       >
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
       </button>
-
-      {message && <div id="payment-message">{message}</div>}
     </form>
   );
 }

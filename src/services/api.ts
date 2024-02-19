@@ -36,4 +36,4 @@ export const PaymentIntentDocument = gql`
   }
 `;
 
-export const BASE_URL = "https://localhost:3001/graphql";
+export const BASE_URL = "https://localhost:3002/graphql";

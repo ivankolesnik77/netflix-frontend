@@ -19,7 +19,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = new HttpLink({
-  uri: "https://localhost:3001/grahpql/",
+  uri: "https://localhost:3002/grahpql/",
 });
 
 function createApolloClient() {
