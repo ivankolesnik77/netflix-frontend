@@ -32,3 +32,21 @@ export const subscriptionRates = {
   [SubscriptionType.Advanced]: 50,
   [SubscriptionType.Premium]: 15,
 };
+
+export const cardPaymentOptions = {
+  style: {
+    base: {
+      fontSize: "16px",
+      color: "#000",
+      "::placeholder": {
+        color: "#aab7c4",
+      },
+    },
+    invalid: {
+      color: "#e53e3e",
+    },
+  },
+};
+
+export const ACCESS_TOKEN_KEY = "accessToken";
+export const REFRESH_TOKEN_KEY = "refreshToken";

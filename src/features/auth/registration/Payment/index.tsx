@@ -1,16 +1,16 @@
 import React, { FC, useEffect } from "react";
 import { RegistrationStage } from "..";
 
-import { IPaymentIntent } from "../../../../components/checkoutForm";
 import { useMutation } from "@apollo/client";
 import { PaymentIntentDocument } from "../../../../services/api";
-import { setPaymentCredentials } from "../../../../store/redux.store";
+import { setPaymentCredentials } from "@/store/redux.store";
 import { useDispatch } from "react-redux";
 import { gql } from "@apollo/client";
-import { Payments } from "../../../payments";
+
+import PaymentFormWrapper from "./PaymentFormWrapper";
 const subscriptionPrice = 300;
 
-const PaymentForm: FC<{
+const Payment: FC<{
   stage: RegistrationStage;
   handleSubmit: () => void;
 }> = ({ stage, handleSubmit }) => {
@@ -61,7 +61,7 @@ const PaymentForm: FC<{
           />
         </span>
       </div>
-      <Payments />
+      <PaymentFormWrapper />
       <small>
         <span className="mt-3 text-gray-500">
           Устанавливая флажок ниже, вы соглашаетесь с Правилами использования и
@@ -76,4 +76,4 @@ const PaymentForm: FC<{
   );
 };
 
-export default PaymentForm;
+export default Payment;

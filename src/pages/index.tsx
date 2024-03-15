@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 const HomeContent = dynamic(() => import("../components/home/HomeContent"), {
   ssr: false, // Disable server-side rendering
 });
-import Layout from "../components/layout";
 
 import {
   ApolloClient,
@@ -25,12 +24,8 @@ loadErrorMessages();
 
 export default function Home(props: any) {
   return (
-    <ApolloProvider client={apolloClient}>
-      <StoreProvider>
-        <Layout>
-          <HomeContent />
-        </Layout>
-      </StoreProvider>
-    </ApolloProvider>
+    <StoreProvider>
+      <HomeContent />
+    </StoreProvider>
   );
 }

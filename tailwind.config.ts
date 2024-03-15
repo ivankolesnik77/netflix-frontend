@@ -30,6 +30,12 @@ const config: Config = {
         scroll: "scroll 40s linear infinite",
       },
 
+      colors: {
+        link: "#0080ff",
+        primary: "#333",
+        secondary: "#999",
+      },
+
       boxShadow: {
         field:
           "0px 1px 1px rgba(0, 0, 0, 0.03), 0px 3px 6px rgba(0, 0, 0, 0.02), 0 0 0 3px hsla(210, 96%, 45%, 25%) , 0 1px 1px 0 rgba(0, 0, 0, 0.08)",
@@ -57,11 +63,15 @@ const config: Config = {
           },
         },
       }),
+
       backgroundImage: {
         linearGradient:
           "linear-gradient(180deg,hsla(0,0%,8%,0) 0,hsla(0,0%,8%,.15) 15%,hsla(0,0%,8%,.35) 29%,hsla(0,0%,8%,.68) 44%,#141414 68%,#141414)",
         bannerGradient:
           "linear-gradient(180deg,hsla(0,0%,8%,0) 0,hsla(0,0%,8%,.15) 15%,hsla(0,0%,8%,.35) 29%,hsla(0,0%,8%,.58) 44%,#141414 68%,#141414), url('/images/main-bg-lg.png')",
+      },
+      fontFamily: {
+        sans: ["var(--font-netflix)"],
       },
     },
   },

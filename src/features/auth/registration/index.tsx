@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
-import { IPaymentIntent } from "../../../components/checkoutForm";
+
 import ChoosePlan from "./ChoosePlan";
-import PaymentForm from "./PaymenForm";
-import UserForm from "./UserForm";
+import Payment from "./Payment";
+import RegisterForm from "./RegisterForm";
 import React, { FC, useState } from "react";
 import { setUser } from "../../../store/redux.store";
 import { setPassword } from "../../../store/auth.store";
@@ -22,7 +22,7 @@ const Registration = () => {
     switch (stage) {
       case RegistrationStage.LoginForm:
         return (
-          <UserForm
+          <RegisterForm
             stage={stage}
             handleSubmit={(data) => {
               setStage(RegistrationStage.PaymentPlan);
@@ -43,8 +43,7 @@ const Registration = () => {
         );
       case RegistrationStage.PaymentForm:
         return (
-          <PaymentForm
-            // paymentIntent={paymentIntent}
+          <Payment
             stage={stage}
             handleSubmit={() => setStage(RegistrationStage.LoginForm)}
           />

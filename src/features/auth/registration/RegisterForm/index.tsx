@@ -58,7 +58,7 @@ const UserForm: FC<{
                     </label>
                   </div>
                   <input
-                    type="password"
+                    type="current-password"
                     name="password"
                     value={authData.password}
                     onChange={handleChange}

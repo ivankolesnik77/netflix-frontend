@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
+const withImages = require("next-images");
+
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    REACT_APP_DOMAIN: process.env.REACT_APP_DOMAIN,
+    REACT_APP_DOMAIN: "http://localhost:3000",
   },
   images: {
     remotePatterns: [

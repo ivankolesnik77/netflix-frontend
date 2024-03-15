@@ -4,11 +4,11 @@ import {
   increaseCount,
   initializeProducts,
 } from "../../../../../store/redux.store";
-import { fetcher } from "../../../../../services/fetcher";
 
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import gql from "graphql-tag";
+import { useMutation } from "@apollo/client";
 export const mutation = gql`
   mutation CreateOrder($order: OrderInput!) {
     createOrder(order: $order) {
@@ -39,6 +39,19 @@ export const Cart = () => {
     dispatch(increaseCount(id));
   };
 
+  const [mutate] = useMutation(mutation, {
+    onCompleted(data) {
+      console.log(data);
+      const order = data?.createOrder;
+
+      if (order.token) {
+        // dispatch(setOrderToken(order.token));
+        console.log("Created order: ", data);
+        router.push(href);
+      }
+    },
+  });
+
   const createOrder = async () => {
     const orderInput = {
       userId: 1,
@@ -50,19 +63,21 @@ export const Cart = () => {
       })),
     };
 
-    try {
-      const data = await fetcher(mutation, { order: orderInput });
-      const order = data?.createOrder;
+    mutate({ variables: { order: orderInput } });
 
-      if (order.token) {
-        // dispatch(setOrderToken(order.token));
-        console.log("Created order: ", data);
+    // try {
+    //   const data = await fetcher(mutation, { order: orderInput });
+    //   const order = data?.createOrder;
 
-        router.push(href);
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    //   if (order.token) {
+    //     // dispatch(setOrderToken(order.token));
+    //     console.log("Created order: ", data);
+
+    //     router.push(href);
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   return (

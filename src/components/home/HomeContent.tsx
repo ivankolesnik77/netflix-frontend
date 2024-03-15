@@ -14,12 +14,13 @@ import VideoPlayer from "./VideoPlayer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import Registration from "../../features/auth/registration";
-import { useParams } from "next/navigation";
+
 import { setAuth } from "../../store/auth.store";
-import { useRouter } from "next/router";
-import { fetcher } from "../../services/fetcher";
-import { gql } from "@apollo/client";
+
+import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { setUser } from "../../store/redux.store";
+import { useAppSelector } from "../../utils/hooks";
+import { REFRESH_TOKEN } from "../../services/interceptor";
 const mockData = [
   {
     movieScene: "/images/main-bg.png",
@@ -60,8 +61,8 @@ const mockItems = [
 ];
 
 const VerifyTokenDocument = gql`
-  query VerifyToken($user: VerifyUserInput!) {
-    verifyToken(user: $user) {
+  query AuthMe {
+    authMe {
       email
       userName
     }
@@ -75,12 +76,37 @@ export default function HomeContent({
   bannerUri = baseStaticPath + "banner.jpg",
   // paymentIntent,
 }: any) {
-  const router = useRouter();
+  const dispatch = useDispatch();
+  const isAuth = useAppSelector((state) => state.auth.isAuth);
 
-  const isAuth = useSelector((state: RootState) => state.auth.isAuth);
+  useQuery(VerifyTokenDocument, {
+    onCompleted(data) {
+      console.log(data);
+      if (data.authMe !== null) {
+        const user = data.authMe;
+        dispatch(setAuth(true));
+        dispatch(setUser({ email: user.email, userName: user.userName }));
+      }
+    },
+    skip: !!isAuth,
+  });
+
+  const [refreshTokens] = useMutation(REFRESH_TOKEN, {
+    onCompleted(data) {
+      console.log(data);
+      localStorage.setItem("accessToken", data.refreshTokens.accessToken);
+      dispatch(setAuth(true));
+    },
+  });
+
+  useEffect(() => {
+    if (!isAuth && isAuth !== null) {
+      refreshTokens();
+    }
+  }, [isAuth]);
 
   const [isVideo, setIsVideo] = useState(false);
-  const dispatch = useDispatch();
+
   useEffect(() => {
     const timer = setInterval(() => {
       setIsVideo(!isVideo);
@@ -89,23 +115,6 @@ export default function HomeContent({
       clearInterval(timer);
     };
   }, [isVideo]);
-
-  useEffect(() => {
-    const authUser = async () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const result = await fetcher(VerifyTokenDocument, { user: { token } });
-
-        if (result.data.verifyToken !== null) {
-          const user = result.data.verifyToken;
-          dispatch(setAuth());
-          dispatch(setUser({ email: user.email, userName: user.userName }));
-        }
-      }
-    };
-
-    authUser();
-  }, []);
 
   const { isTop10, movieScene, ratingTitle, description, movieTitleLogo } =
     introMovie;

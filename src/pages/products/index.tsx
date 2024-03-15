@@ -1,5 +1,5 @@
 import React from "react";
-import { fetcher } from "../../services/fetcher";
+
 import { PaymentIntentDocument } from "../../services/api";
 import gql from "graphql-tag";
 import Image from "next/image";
@@ -20,9 +20,9 @@ export const ProductsDocument = gql`
 `;
 
 export const getServerSideProps = async () => {
-  const data = await fetcher(ProductsDocument, { amount: 500 });
+  // const data = await fetcher(ProductsDocument, { amount: 500 });
 
-  return { props: { data: data || { products: [] } } };
+  return { props: { data: { products: [] } } };
 };
 
 const Products = ({ data }: { data: { products: any[] } }) => {

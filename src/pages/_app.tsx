@@ -1,11 +1,21 @@
-import React from "react";
-import Layout from "../components/layout";
+import React, { useMemo } from "react";
+
 import type { AppProps } from "next/app";
 import "../fontawesome";
 import "../styles/globals.css";
-import Registration from "../features/auth/registration";
-import LoginLayout from "../components/layout/LoginLayout";
+import Layout from "../components/layout";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import StoreProvider from "../store/StoreProvider";
+import { apolloClient } from "../services/apolloClient";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  return (
+    <ApolloProvider client={apolloClient}>
+      <StoreProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </StoreProvider>
+    </ApolloProvider>
+  );
 }

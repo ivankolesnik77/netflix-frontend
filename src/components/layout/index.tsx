@@ -28,7 +28,7 @@ const netflixFont = localFont({
     {
       path: "../../../public/fonts/Netflix-Medium.otf",
       weight: "500",
-      style: "semibold",
+      style: "normal",
     },
   ],
   variable: "--font-netflix",
@@ -49,8 +49,7 @@ const Layout: FC<IProps> = ({ children }) => {
     <div className={netflixFont.className}>
       <div className="font-netflix flex flex-col text-white md:px-10 lg:px-[60px]">
         <Menu />
-        <div>{children}</div>
-
+        {children}
         <Footer />
       </div>
     </div>
