@@ -47,7 +47,7 @@ const Layout: FC<IProps> = ({ children }) => {
 
   return (
     <div className={netflixFont.className}>
-      <div className="font-netflix flex flex-col text-white md:px-10 lg:px-[60px]">
+      <div className="font-netflix grid h-screen grid-rows-[min-content,1fr,300px] text-white md:px-10 lg:px-[60px]">
         <Menu />
         {children}
         <Footer />

@@ -17,10 +17,17 @@ import Registration from "../../features/auth/registration";
 
 import { setAuth } from "../../store/auth.store";
 
-import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
+import {
+  gql,
+  useApolloClient,
+  useMutation,
+  useQuery,
+  useLazyQuery,
+} from "@apollo/client";
 import { setUser } from "../../store/redux.store";
 import { useAppSelector } from "../../utils/hooks";
 import { REFRESH_TOKEN } from "../../services/interceptor";
+import { Router, useRouter } from "next/router";
 const mockData = [
   {
     movieScene: "/images/main-bg.png",
@@ -118,9 +125,10 @@ export default function HomeContent({
 
   const { isTop10, movieScene, ratingTitle, description, movieTitleLogo } =
     introMovie;
-
-  if (!isAuth) {
-    return <Registration />;
+  const router = useRouter();
+  if (isAuth) {
+    router.push("/register");
+    return;
   }
 
   return (

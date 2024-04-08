@@ -37,9 +37,10 @@ const LoginLayout: FC<IProps> = ({ children }) => {
   return (
     <StoreProvider>
       <div className={netflixFont.className}>
-        <div className="font-netflix flex flex-col bg-white text-white ">
+        <div className="font-netflix grid h-screen grid-rows-[min-content,1fr,300px] bg-white text-white ">
           <LoginMenu />
           {children}
+          <Footer />
         </div>
       </div>
     </StoreProvider>

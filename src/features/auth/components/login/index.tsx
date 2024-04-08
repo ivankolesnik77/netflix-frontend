@@ -3,6 +3,7 @@ import React, { ChangeEvent, FC, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setAuth } from "@/store/auth.store";
 import { useRouter } from "next/router";
+import Link from "next/link";
 // import bcrypt from "bcryptjs";
 export type AuthDataType = {
   password: string;
@@ -104,13 +105,22 @@ const LoginForm: FC = () => {
                     className="w-full  border px-3 py-2 text-black dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                   />
                 </div>
-                <a
-                  rel="noopener noreferrer"
-                  href="#"
-                  className="text-md  text-blue-600 hover:underline"
-                >
-                  Забыл пароль?
-                </a>
+                <div className="flex justify-between">
+                  <Link
+                    rel="noopener noreferrer"
+                    href="#"
+                    className="text-md  text-blue-600 hover:underline"
+                  >
+                    Forgot a password?
+                  </Link>
+                  <Link
+                    rel="noopener noreferrer"
+                    href="/register"
+                    className="text-md  text-blue-600 hover:underline"
+                  >
+                    {"Don't have an account?"}
+                  </Link>
+                </div>
               </div>
               <div className="space-y-2">
                 <div>

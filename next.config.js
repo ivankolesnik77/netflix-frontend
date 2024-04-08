@@ -14,6 +14,12 @@ const nextConfig = {
         port: "",
         pathname: "/350/**",
       },
+      {
+        protocol: "https",
+        hostname: "assets.nflxext.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

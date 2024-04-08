@@ -7,7 +7,6 @@ import LoginForm from "../../features/auth/components/login";
 
 const LoginPage = () => {
   const isAuth = useAppSelector((state) => state.auth.isAuth);
-  console.log(isAuth);
 
   return <LoginForm />;
 };

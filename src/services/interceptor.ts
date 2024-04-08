@@ -80,7 +80,7 @@ const errorLink = onError(
   },
 );
 
-const protectedRoutes = ["/"];
+const protectedRoutes = ["/", "/profile"];
 
 const requestLink = new ApolloLink((operation, forward) => {
   const href = window.location.href.split("localhost:3000").at(-1);

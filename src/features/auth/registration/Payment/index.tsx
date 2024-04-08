@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { gql } from "@apollo/client";
 
 import PaymentFormWrapper from "./PaymentFormWrapper";
+import Image from "next/image";
 const subscriptionPrice = 300;
 
 const Payment: FC<{
@@ -23,7 +24,7 @@ const Payment: FC<{
     const getRequestPaymentIntent = async () => {
       const paymentIntent: any = await createPaymentIntent();
 
-      const { clientSecret } = paymentIntent.data.paymentIntent;
+      const clientSecret = paymentIntent.data.createPaymentIntent;
       dispatch(setPaymentCredentials({ clientSecret }));
     };
 
@@ -47,17 +48,25 @@ const Payment: FC<{
           className="my-3 flex gap-2"
           aria-label="Мы принимаем Visa, Mastercard и American Express."
         >
-          <img
-            src="https://assets.nflxext.com/siteui/acquisition/payment/ffe/paymentpicker/VISA.png"
+          <Image
+            src={
+              "https://assets.nflxext.com/siteui/acquisition/payment/ffe/paymentpicker/VISA.png"
+            }
             alt="Visa"
+            width={80}
+            height={30}
           />
-          <img
+          <Image
             src="https://assets.nflxext.com/siteui/acquisition/payment/ffe/paymentpicker/MASTERCARD.png"
             alt="Mastercard"
+            width={80}
+            height={30}
           />
-          <img
+          <Image
             src="https://assets.nflxext.com/siteui/acquisition/payment/ffe/paymentpicker/AMEX.png"
             alt="American Express"
+            width={80}
+            height={30}
           />
         </span>
       </div>

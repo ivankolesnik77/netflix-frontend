@@ -21,7 +21,7 @@ import axios, { AxiosInstance } from "axios";
 export const BannerDocument = `
   type Query {
     users {
-      id, 
+      id,
       name,
       age
     },
@@ -30,9 +30,7 @@ export const BannerDocument = `
 
 export const PaymentIntentDocument = gql`
   mutation CreatePaymentIntent($amount: Float!) {
-    paymentIntent(amount: $amount) {
-      clientSecret
-    }
+    createPaymentIntent(amount: $amount)
   }
 `;
 

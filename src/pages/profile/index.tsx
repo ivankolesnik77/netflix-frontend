@@ -1,7 +1,13 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import premiumSvg from "/public/icons/premium.svg";
+import { gql, useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
+import Link from "next/link";
+
 const Profile = () => {
+  const [isTooltip, setIsTooltip] = useState(false);
+
   return (
     <div className="bg-[#f2f2f2]">
       <div className="container mx-auto my-5 max-w-[1024px]  text-base font-medium  text-gray-700">
@@ -108,9 +114,26 @@ const Profile = () => {
             </p>
             <a href="">Help Center</a>.
           </div>
-          <a href="" className="ml-auto text-end">
-            Buy an extra member slot
-          </a>
+          <div className="relative">
+            <Link
+              href="/accountOwner/addNewMember"
+              data-tooltip-target="tooltip-invite"
+              className="ml-auto text-end"
+            >
+              Buy an extra member slot
+            </Link>
+
+            {isTooltip && (
+              <div
+                id="tooltip-default"
+                role="tooltip"
+                className="tooltip absolute -bottom-5 -left-4 z-10 inline-block whitespace-nowrap rounded-lg bg-blue-300 px-5 py-2 text-sm font-medium text-white  shadow-sm transition-opacity duration-300 dark:bg-gray-700"
+              >
+                <div className="absolute -top-2 left-16 h-0 w-0 border-x-8 border-b-[9px] border-x-transparent border-b-blue-300"></div>
+                Invite was copied!
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex pb-5 pt-2">
           <p className="text-gr w-[28%] whitespace-pre-wrap text-lg text-gray-300 ">

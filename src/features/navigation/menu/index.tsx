@@ -101,13 +101,13 @@ const MenuPopover = () => {
                 width={15}
                 height={15}
               />
-              <a
+              <Link
                 aria-label="Manage Profiles"
                 className="hover:underline"
                 href={item.link}
               >
                 <span>{item.title}</span>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
