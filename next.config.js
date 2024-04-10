@@ -22,6 +22,14 @@ const nextConfig = {
       },
     ],
   },
+  compiler: {
+    relay: {
+      src: "./",
+      artifactDirectory: "./src/__generated__",
+      language: "typescript",
+      eagerEsModules: false,
+    },
+  },
 };
 
 module.exports = nextConfig;

@@ -12,6 +12,9 @@ import StoreProvider from "../../store/StoreProvider";
 import localFont from "next/font/local";
 import LoginLayout from "./LoginLayout";
 import { RootState } from "../../store";
+import { graphql } from "relay-runtime";
+import environment from "@/services/customFetch";
+import { QueryRenderer } from "react-relay";
 
 const netflixFont = localFont({
   src: [
@@ -46,13 +49,34 @@ const Layout: FC<IProps> = ({ children }) => {
   }
 
   return (
-    <div className={netflixFont.className}>
-      <div className="font-netflix grid h-screen grid-rows-[min-content,1fr,300px] text-white md:px-10 lg:px-[60px]">
-        <Menu />
-        {children}
-        <Footer />
-      </div>
-    </div>
+    <QueryRenderer
+      environment={environment}
+      query={graphql`
+        query UserQuery {
+          viewer {
+            id
+          }
+        }
+      `}
+      variables={{}}
+      render={({ error, props }: any) => {
+        if (error) {
+          return <div>Error!</div>;
+        }
+        if (!props) {
+          return <div>Loading...</div>;
+        }
+        return (
+          <div className={netflixFont.className}>
+            <div className="font-netflix grid h-screen grid-rows-[min-content,1fr,300px] text-white md:px-10 lg:px-[60px]">
+              <Menu />
+              {children}
+              <Footer />
+            </div>
+          </div>
+        );
+      }}
+    />
   );
 };
 
