@@ -1,8 +1,8 @@
 import Head from "next/head";
 import styles from "./layout.module.css";
-import Menu from "../../features/navigation/menu";
+import Menu from "./navigation/menu";
 import { FC, useEffect, useRef, useState } from "react";
-import Footer from "./Footer";
+import Footer from "./footer";
 
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import StoreProvider from "../../store/StoreProvider";
 
 import localFont from "next/font/local";
 
-import LoginMenu from "../../features/navigation/loginMenu";
+import LoginMenu from "./navigation/loginMenu";
 
 const netflixFont = localFont({
   src: [
@@ -21,7 +21,7 @@ const netflixFont = localFont({
       style: "normal",
     },
     {
-      path: "../../../public/fonts/Netflix-Light.otf",
+      path: "../../../public/fonts/Netflix-Light.ttf",
       weight: "300",
       style: "normal",
     },

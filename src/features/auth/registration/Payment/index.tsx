@@ -24,7 +24,8 @@ const Payment: FC<{
     const getRequestPaymentIntent = async () => {
       const paymentIntent: any = await createPaymentIntent();
 
-      const clientSecret = paymentIntent.data.createPaymentIntent;
+      const clientSecret = paymentIntent.data.paymentIntent.clientSecret;
+      console.log(clientSecret);
       dispatch(setPaymentCredentials({ clientSecret }));
     };
 
@@ -53,20 +54,23 @@ const Payment: FC<{
               "https://assets.nflxext.com/siteui/acquisition/payment/ffe/paymentpicker/VISA.png"
             }
             alt="Visa"
-            width={80}
+            width={40}
             height={30}
+            className="h-min"
           />
           <Image
             src="https://assets.nflxext.com/siteui/acquisition/payment/ffe/paymentpicker/MASTERCARD.png"
             alt="Mastercard"
-            width={80}
+            width={40}
             height={30}
+            className="h-min"
           />
           <Image
             src="https://assets.nflxext.com/siteui/acquisition/payment/ffe/paymentpicker/AMEX.png"
             alt="American Express"
-            width={80}
+            width={40}
             height={30}
+            className="h-min"
           />
         </span>
       </div>

@@ -7,23 +7,23 @@ export const menuItems = [
   },
   {
     name: "TV Shows",
-    href: "/",
+    href: "/tv",
   },
   {
     name: "Movies",
-    href: "/",
+    href: "/movies",
   },
   {
-    name: "News & Popular",
-    href: "/",
+    name: "New & Popular",
+    href: "/news",
   },
   {
     name: "My List",
-    href: "/",
+    href: "/my-list",
   },
   {
     name: "Browse by Languages",
-    href: "/",
+    href: "/browse",
   },
 ];
 

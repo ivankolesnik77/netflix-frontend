@@ -16,12 +16,12 @@ import { RootState } from "@/store";
 import { cardPaymentOptions, subscriptionRates } from "@/utils/constants";
 import { setAuth } from "@/store/auth.store";
 import { IPaySubscription } from "./types";
+import DefaultButton from "@/components/layout/buttons/DefaultButton";
 
 export const CreateSubscriptionDocument = gql`
   mutation CreateSubscription($subscription: CreateSubscriptionInput!) {
     createSubscription(subscription: $subscription) {
-      token
-      clientSecret
+      accessToken
     }
   }
 `;
@@ -38,10 +38,9 @@ export default function PaymentForm({ clientSecret }: any) {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
 
-  const [createSubscription, { loading: isLoading }] = useMutation<{
+  const [createSubscription] = useMutation<{
     createSubscription: {
-      token: string;
-      clientSecret: string;
+      accessToken: string;
     };
   }>(CreateSubscriptionDocument, {
     onError: (err: any) => {
@@ -74,7 +73,7 @@ export default function PaymentForm({ clientSecret }: any) {
     currentUser,
     paymentMethodId,
   }: IPaySubscription) => {
-    if (!stripe) return;
+    if (!stripe || !elements) return;
 
     const { email, subscriptionType } = currentUser;
     const subscriptionPrice =
@@ -91,22 +90,31 @@ export default function PaymentForm({ clientSecret }: any) {
     const { data } = await createSubscription({
       variables: params,
     });
-
-    if (data) {
-      const confirmPayment = await stripe.confirmCardPayment(
-        data?.createSubscription.clientSecret,
-      );
+    const cardElement = elements.getElement(CardElement);
+    if (data && cardElement) {
+      const confirmPayment = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: name,
+            email: "stonebo0sh@gmail.com",
+          },
+        },
+      });
       if (confirmPayment?.error) {
         console.log(confirmPayment.error.message);
       } else {
         dispatch(setAuth(true));
-        localStorage.setItem("accessToken", data.createSubscription.token);
+        localStorage.setItem(
+          "accessToken",
+          data.createSubscription.accessToken,
+        );
       }
     }
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: any) => {
+    e?.preventDefault();
 
     const { subscriptionType } = currentUser;
     if (!stripe || !elements || !subscriptionType) {
@@ -166,13 +174,13 @@ export default function PaymentForm({ clientSecret }: any) {
         </div>
       ))}
 
-      <button
-        className="my-5 w-full rounded-md bg-red-600 px-8 py-3 font-semibold text-white"
-        disabled={!stripe || !elements}
-        id="submit"
-      >
-        <span id="button-text">Pay now</span>
-      </button>
+      <DefaultButton
+        type="submit"
+        onClick={() => handleSubmit()}
+        value="Pay now"
+        className=" my-5 w-full rounded-md px-8 py-3 font-semibold"
+        // disabled={!stripe || !elements}
+      />
     </form>
   );
 }

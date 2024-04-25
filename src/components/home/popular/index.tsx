@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { FC, useState } from "react";
-import { DefaultCarousel } from "../../layout/Carousel";
+import { DefaultCarousel } from "../../layout/carousel";
 import { useTimer } from "../../../utils/hooks";
 
 interface IProps {
@@ -20,8 +20,8 @@ const Popular: FC<IProps> = ({ items }) => {
   };
 
   return (
-    <div className="font-semibold relative mt-6 pt-6">
-      <h2 className="text-white mb-3 ">Popular on Netflix</h2>
+    <div className="relative mt-6 pt-6 font-semibold">
+      <h2 className="mb-3 text-2xl text-white ">Popular on Netflix</h2>
       <div>
         <DefaultCarousel isUpdate={isUpdate}>
           {items.map((item, key) => (
@@ -32,7 +32,12 @@ const Popular: FC<IProps> = ({ items }) => {
               href={item.href}
               className="w-[240px]"
             >
-              <img src={item.src} alt={item.title} width={280} className="rounded-sm" />
+              <img
+                src={item.src}
+                alt={item.title}
+                width={280}
+                className="rounded-sm"
+              />
             </Link>
           ))}
         </DefaultCarousel>

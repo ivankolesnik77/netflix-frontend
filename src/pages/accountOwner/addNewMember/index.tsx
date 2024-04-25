@@ -3,6 +3,7 @@ import React from "react";
 import infoSvg from "/public/icons/info.svg";
 import inviteCardPng from "/public/images/inviteCard.png";
 import Link from "next/link";
+import DefaultButton from "@/components/layout/buttons/DefaultButton";
 const benefits = [
   "Their own account and password",
   "An existing profile or a new one",
@@ -11,13 +12,13 @@ const benefits = [
 
 const AddNewMember = () => {
   return (
-    <div className="container mx-auto h-[91vh] text-primary">
+    <div className="mx-auto h-[91vh] w-full bg-white text-primary">
       <div className="mx-auto my-5 mt-16 max-w-[440px]">
         <Image src={inviteCardPng} width={120} alt="info" className="mb-2" />
-        <h2 className="text-[32px] font-bold leading-10">
+        <h2 className="font-bold text-[32px] leading-10">
           Invite an extra member to enjoy all of Netflix
         </h2>
-        <p className="text mb-4 mt-5 whitespace-nowrap text-lg font-bold">
+        <p className="text mb-4 mt-5 whitespace-nowrap font-bold text-lg">
           For EUR 2.99 a month, they get:
         </p>
         <ul className="space-y-4 text-left  ">
@@ -51,17 +52,15 @@ const AddNewMember = () => {
             width={15}
             height={15}
             alt="info"
-            className=" max-h-[15px]"
+            className="max-h-[15px] invert"
           />
           <span className="text-sm text-black">
             Extra members need to set up their account in the country where you
             started your membership.
           </span>
         </div>
-        <Link href={"/accountOwner/payment"}>
-          <button className="w-full rounded bg-red-700 px-4 py-4 text-xl font-bold text-white hover:bg-blue-700">
-            Next
-          </button>
+        <Link href={"/accountOwner/memberInfo"}>
+          <DefaultButton value="Next" className="w-full rounded " />
         </Link>
       </div>
     </div>

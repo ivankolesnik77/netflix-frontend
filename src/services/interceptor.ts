@@ -40,7 +40,7 @@ const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
-        switch (err.extensions.code) {
+        switch (err.extensions?.code) {
           case "UNAUTHENTICATED":
             // ignore 401 error for a refresh request
             if (operation.operationName === "refreshTokens") return;

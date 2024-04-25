@@ -30,7 +30,9 @@ export const BannerDocument = `
 
 export const PaymentIntentDocument = gql`
   mutation CreatePaymentIntent($amount: Float!) {
-    paymentIntent(amount: $amount)
+    paymentIntent(amount: $amount) {
+      clientSecret
+    }
   }
 `;
 

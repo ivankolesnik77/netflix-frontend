@@ -1,20 +1,78 @@
 import React, { ChangeEvent, FC, useState } from "react";
 import { RegistrationStage } from "..";
+import DefaultButton from "@/components/layout/buttons/DefaultButton";
+import * as yup from "yup";
+import { gql } from "@/__generated__/gql";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { DocumentNode, useQuery } from "@apollo/client";
+import { Query } from "@/__generated__/graphql";
 
 export type AuthDataType = {
   password: string;
   email: string;
 };
 
+const regex = new RegExp("^(?=.*[A-Z]).{8,}$");
+const schema = yup
+  .object({
+    email: yup.string().email().required(),
+    password: yup.string().matches(regex).required(),
+  })
+  .required();
+
+interface IFormInput {
+  email: string;
+  password: string;
+}
+
+const CheckUserWithEmail = gql(`
+  query CheckUserWithEmail ($email: String!) {
+      checkUserWithEmail (email: $email) {
+        isExistingUser
+      }
+    }
+`) as DocumentNode;
+
 const UserForm: FC<{
   stage: RegistrationStage;
-  handleSubmit: (data: AuthDataType) => void;
-}> = ({ stage, handleSubmit }) => {
-  const [authData, setAuthData] = useState({ password: "", email: "" });
+  onSubmit: (data: AuthDataType) => void;
+}> = ({ stage, onSubmit }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    register,
+    setError,
+    handleSubmit,
+    formState: { errors, isValid },
+    getValues,
+  } = useForm<IFormInput>({
+    resolver: yupResolver(schema),
+  });
+  console.log(errors);
+  console.log("sd", !isSubmitting || !isValid);
+  const values = getValues();
+  useQuery(CheckUserWithEmail, {
+    variables: { email: values.email },
+    onCompleted: (data) => {
+      console.log(data.checkUserWithEmail);
+      if (data.checkUserWithEmail.isExistingUser) {
+        setError("email", {
+          type: "validate",
+          message: "Email is already existing",
+        });
+        setIsSubmitting(false);
+      } else {
+        console.log("submit");
+        setIsSubmitting(false);
+        onSubmit(values);
+      }
+    },
+    onError: () => setIsSubmitting(false),
+    skip: !isSubmitting || !isValid,
+  });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.getAttribute("name");
-    name && setAuthData({ ...authData, [name]: e.target.value });
+  const handleSubmitLocal = (data: any) => {
+    console.log(data);
   };
 
   return (
@@ -32,7 +90,11 @@ const UserForm: FC<{
         </div>
         <div>
           <div className=" flex max-w-md flex-col rounded-md  dark:text-gray-100 ">
-            <form action="" className="space-y-4">
+            <form
+              onSubmit={handleSubmit(handleSubmitLocal)}
+              action=""
+              className="space-y-4"
+            >
               <div className="mt-3">
                 <div>
                   <label
@@ -42,14 +104,17 @@ const UserForm: FC<{
                     Адресс электронной почты
                   </label>
                   <input
+                    {...register("email")}
                     type="email"
-                    name="email"
                     id="email"
-                    value={authData.email}
-                    onChange={handleChange}
                     placeholder="leroy@jenkins.com"
-                    className="w-full  border px-3 py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                    className="w-full border-0 px-3 py-2"
                   />
+                  {errors.email && (
+                    <p className="mt-2 text-xs capitalize text-red text-red dark:text-green-400">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
                 <div className="my-3 mb-2">
                   <div className="mb-2 flex justify-between">
@@ -58,14 +123,23 @@ const UserForm: FC<{
                     </label>
                   </div>
                   <input
+                    {...register("password")}
                     type="current-password"
-                    name="password"
-                    value={authData.password}
-                    onChange={handleChange}
                     id="password"
                     placeholder="*****"
-                    className="w-full  border px-3 py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                    className="w-full border  bg-[#fff] px-3 py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                   />
+                  {errors.password && (
+                    <p className="mt-2 text-xs  text-red dark:text-green-400">
+                      <div className="flex gap-2">
+                        Password must be:
+                        <div>
+                          <div>- at least 8 characters</div>
+                          <div>- contain at least one capital letter</div>
+                        </div>
+                      </div>
+                    </p>
+                  )}
                 </div>
                 <a
                   rel="noopener noreferrer"
@@ -77,13 +151,12 @@ const UserForm: FC<{
               </div>
               <div className="space-y-2">
                 <div>
-                  <button
-                    onClick={() => handleSubmit(authData)}
-                    type="button"
-                    className="w-full rounded-md bg-red-600 px-8 py-3 font-semibold text-white"
-                  >
-                    Далее
-                  </button>
+                  <DefaultButton
+                    onClick={() => setIsSubmitting(!isSubmitting)}
+                    value="Далее"
+                    type="submit"
+                    className="bg-red-600 w-full rounded-md px-8 py-3 font-semibold text-white"
+                  />
                 </div>
               </div>
             </form>

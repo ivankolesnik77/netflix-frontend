@@ -1,9 +1,10 @@
 import React, { FC, useState } from "react";
 import { RegistrationStage } from "..";
-import { fetcher } from "../../../../services/fetcher";
+// import { fetcher } from "../../../../services/fetcher";
 import { SubscriptionType } from "../../../../store/redux.store";
 import { useDispatch } from "react-redux";
 import { gql } from "@apollo/client";
+import DefaultButton from "@/components/layout/buttons/DefaultButton";
 const planOptions = [
   "Неограниченный просмотр. Без рекламы.",
   "Персональные рекомендации.",
@@ -146,7 +147,7 @@ const ChoosePlan: FC<{
 
                   <span
                     onClick={() => setActivePlanIndex(key)}
-                    className={`mx-auto flex h-[120px] w-[120px] items-center justify-center rounded-sm bg-red-600 p-4 text-center text-lg font-semibold text-white ${
+                    className={`bg-red-600 mx-auto flex h-[120px] w-[120px] items-center justify-center rounded-sm p-4 text-center text-lg font-semibold text-white ${
                       key == activePlanIndex ? activeBoxStyle : "opacity-60"
                     } `}
                   >
@@ -198,7 +199,7 @@ const ChoosePlan: FC<{
                       return (
                         <td
                           key={`plan-variant-${key}`}
-                          className=" px-3 py-2 text-center font-semibold text-red-600"
+                          className=" text-red-600 px-3 py-2 text-center font-semibold"
                           role="cell"
                           data-uia="plan-grid-feature-table-cell+planPrice-text_1_stream_name"
                         >
@@ -237,15 +238,14 @@ const ChoosePlan: FC<{
               </span>
             </small>
           </div>
-          <button
+
+          <DefaultButton
+            value="Next"
             onClick={() =>
               handleSubmit(Object.values(SubscriptionType)[activePlanIndex])
             }
-            type="button"
-            className="mt-5 w-full rounded-md bg-red-600 px-8 py-3 font-semibold text-white"
-          >
-            Далее
-          </button>
+            className="w-full rounded-md px-8 py-3"
+          />
         </div>
       </div>
     </div>

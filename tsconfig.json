@@ -5,6 +5,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
+
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -16,6 +17,8 @@
     "incremental": true,
     "paths": {
       "@/*": ["src/*"],
+      "@/icons/*": ["public/icons/*"],
+      "@/videos/*": ["videos/*"],
       "@styles/*": ["styles/*"]
     }
   },

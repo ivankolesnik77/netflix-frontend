@@ -62,7 +62,7 @@ export const cartSlice = createSlice({
 
 export interface IUserSliceState {
   id?: number;
-  email?: string;
+  email: string;
   name?: string;
   userName?: string;
   subscriptionType?: SubscriptionType;
@@ -74,13 +74,13 @@ export enum SubscriptionType {
   Premium = "Premium",
 }
 
-const userInitialState: IUserSliceState = {};
+const userInitialState: IUserSliceState = { email: "" };
 
 export const userSlice = createSlice({
   name: "user",
   initialState: userInitialState,
   reducers: {
-    setUser: (state, action: PayloadAction<IUserSliceState>) => {
+    setUser: (state, action: PayloadAction<Partial<IUserSliceState>>) => {
       state = { ...state, ...action.payload };
       return state;
     },

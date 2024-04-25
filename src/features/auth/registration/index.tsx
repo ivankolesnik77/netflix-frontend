@@ -6,6 +6,8 @@ import RegisterForm from "./RegisterForm";
 import React, { FC, useState } from "react";
 import { setUser } from "../../../store/redux.store";
 import { setPassword } from "../../../store/auth.store";
+import { useRouter } from "next/router";
+import { useAppSelector } from "@/utils/hooks";
 
 export enum RegistrationStage {
   LoginForm = "LOGIN_FORM",
@@ -24,7 +26,7 @@ const Registration = () => {
         return (
           <RegisterForm
             stage={stage}
-            handleSubmit={(data) => {
+            onSubmit={(data) => {
               setStage(RegistrationStage.PaymentPlan);
               dispatch(setPassword(data.password));
               dispatch(setUser({ email: data.email }));
@@ -50,6 +52,12 @@ const Registration = () => {
         );
     }
   };
+  const isAuth = useAppSelector((state) => state.auth.isAuth);
+  const router = useRouter();
+
+  if (isAuth) {
+    router.push("/");
+  }
 
   return (
     <div className="h-[100vh] bg-white text-left text-black">

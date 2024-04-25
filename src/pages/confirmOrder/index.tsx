@@ -1,6 +1,5 @@
 import React from "react";
 
-import { fetcher } from "../../services/fetcher";
 import { gql } from "@apollo/client";
 import { apolloClient } from "..";
 type Repo = {

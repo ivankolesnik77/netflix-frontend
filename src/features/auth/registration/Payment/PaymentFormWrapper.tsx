@@ -13,12 +13,13 @@ const stripePromise = loadStripe(
 export default function PaymentFormWrapper() {
   const cart = useAppSelector((state) => state.cart);
   if (!cart.clientSecret) return null;
+  console.log(cart.clientSecret);
   return (
     <Elements
       stripe={stripePromise}
       options={{ clientSecret: cart.clientSecret }}
     >
-      <PaymentForm />
+      <PaymentForm clientSecret={cart.clientSecret} />
     </Elements>
   );
 }

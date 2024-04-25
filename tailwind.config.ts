@@ -6,8 +6,19 @@ const config: Config = {
     "./src/components/**/*.tsx",
     "./src/app/**/*.tsx",
     "./src/features/**/*.tsx",
+    "./node_modules/flowbite/**/*.js",
   ],
   theme: {
+    fontFamily: {
+      netflix: [
+        "Netflix Sans",
+        "Helvetica Neue",
+        "Segoe UI",
+        "Roboto",
+        "Ubuntu",
+        "sans-serif",
+      ],
+    },
     extend: {
       screens: {
         sm: "640px",
@@ -31,9 +42,12 @@ const config: Config = {
       },
 
       colors: {
+        white: "#e5e5e5",
         link: "#0080ff",
         primary: "#333",
         secondary: "#999",
+        black: "#393536",
+        red: "#c82f27",
       },
 
       boxShadow: {
@@ -75,6 +89,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("daisyui"), require("flowbite/plugin")],
 };
 export default config;

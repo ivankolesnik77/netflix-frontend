@@ -1,9 +1,10 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import React, { ChangeEvent, FC, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setAuth } from "@/store/auth.store";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import DefaultButton from "@/components/layout/buttons/DefaultButton";
 // import bcrypt from "bcryptjs";
 export type AuthDataType = {
   password: string;
@@ -11,7 +12,7 @@ export type AuthDataType = {
 };
 
 const AUTH_USER = gql(`
-  mutation AuthUser($user: AuthUserInput!) {
+  query AuthUser($user: AuthUserInput!) {
     authUser(user: $user) {
       user {
         id
@@ -32,24 +33,24 @@ interface IAuthData {
 const LoginForm: FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [login] = useMutation(AUTH_USER, {
+  const [authData, setAuthData] = useState({ password: "", email: "" });
+  const { error, refetch } = useQuery(AUTH_USER, {
     onCompleted: (data: any) => {
       console.log(data);
       localStorage.setItem("accessToken", data.authUser?.user?.accessToken);
       dispatch(setAuth(true));
       router.push("/");
     },
-    onError: (err) => {
-      console.log(err.message);
-    },
+    variables: { user: authData },
+    skip: true,
   });
 
   const handleSubmit = (authData: IAuthData) => {
-    login({ variables: { user: authData } });
+    console.log(authData);
+    refetch({ variables: { user: authData } });
   };
 
-  const [authData, setAuthData] = useState({ password: "", email: "" });
-
+  console.log(authData);
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const name = e.target.getAttribute("name");
     name && setAuthData({ ...authData, [name]: e.target.value });
@@ -57,14 +58,17 @@ const LoginForm: FC = () => {
 
   return (
     <div
-      className=" mx-auto h-[calc(100vh-108px)] w-[400px]  max-w-sm"
+      className=" mx-auto h-[calc(100vh-108px)] h-min  w-[400px] max-w-sm rounded-xl p-5"
       data-uia="form-registration"
     >
       <div>
         <div className="mt-[20px]" data-uia="header">
           <div className="stepHeader" role="status">
-            <h2 className="text-3xl" data-uia="stepTitle">
-              Логин
+            <h2
+              className="text-center text-3xl text-black"
+              data-uia="stepTitle"
+            >
+              Login
             </h2>
           </div>
         </div>
@@ -122,15 +126,19 @@ const LoginForm: FC = () => {
                   </Link>
                 </div>
               </div>
+              {error && (
+                <span className="text-small my-3 text-red">
+                  {error.message}
+                </span>
+              )}
               <div className="space-y-2">
                 <div>
-                  <button
+                  <DefaultButton
+                    value="Войти"
                     onClick={() => handleSubmit(authData)}
                     type="button"
-                    className="w-full rounded-md bg-red-600 px-8 py-3 font-semibold text-white"
-                  >
-                    Войти
-                  </button>
+                    className="bg-red-600 w-full rounded-md px-8 py-3 font-semibold text-white"
+                  ></DefaultButton>
                 </div>
               </div>
             </form>
