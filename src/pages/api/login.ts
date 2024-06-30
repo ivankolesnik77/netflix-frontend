@@ -11,7 +11,7 @@ export default async function handler(
 
   const cookie = serialize("session", encryptedSessionData, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     maxAge: 60 * 60 * 24 * 7, // One week
     path: "/",
   });

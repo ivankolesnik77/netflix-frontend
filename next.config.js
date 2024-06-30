@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const withImages = require("next-images");
 const { withNextVideo } = require("next-video/process");
+
 const nextConfig = {
   async redirects() {
     return [
@@ -25,6 +26,12 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "netflix-static.s3.us-west-2.amazonaws.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "assets.nflxext.com",
         port: "",
         pathname: "/**",
@@ -37,6 +44,7 @@ const nextConfig = {
       },
     ],
   },
+  domains: ['netflix-static.s3.us-west-2.amazonaws.com'],
   // compiler: {
   //   relay: {
   //     src: "./",
@@ -51,7 +59,7 @@ module.exports = withNextVideo(nextConfig, {
   provider: "amazon-s3",
   providerConfig: {
     amazon: {
-      endpoint: "https://next-app-videos.s3.us-west-2.amazonaws.com",
+      endpoint: "https://netflix-static.s3.us-west-2.amazonaws.com",
     },
   },
 });

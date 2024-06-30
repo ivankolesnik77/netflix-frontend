@@ -1,6 +1,6 @@
-import { IUserSliceState } from "../../../../store/redux.store";
+import { IUserSliceState } from '../../../../store/reducers/redux.slice'
 
 export interface IPaySubscription {
-  currentUser: IUserSliceState;
-  paymentMethodId: string;
+    currentUser: IUserSliceState
+    paymentMethodId: string
 }

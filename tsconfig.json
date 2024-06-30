@@ -19,6 +19,7 @@
       "@/*": ["src/*"],
       "@/icons/*": ["public/icons/*"],
       "@/videos/*": ["videos/*"],
+      "@/images/*": ["public/images/*"],
       "@styles/*": ["styles/*"]
     }
   },

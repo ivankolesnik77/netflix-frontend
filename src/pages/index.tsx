@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 const Home = dynamic(() => import("../components/home"), {
-  ssr: false, // Disable server-side rendering
+  ssr: false, 
 });
 
 import { ApolloClient, InMemoryCache } from "@apollo/client";
