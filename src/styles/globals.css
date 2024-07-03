@@ -3,107 +3,108 @@
 @tailwind utilities;
 
 @font-face {
-  font-display: optional;
-  font-family: Netflix Sans;
-  font-weight: 100;
-  src:
-    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Th.woff2)
-      format("woff2"),
-    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Th.woff)
-      format("woff");
+    font-display: optional;
+    font-family: Netflix Sans;
+    font-weight: 100;
+    src:
+        url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Th.woff2)
+            format('woff2'),
+        url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Th.woff)
+            format('woff');
 }
 
 @font-face {
-  font-display: optional;
-  font-family: Netflix Light;
-  font-weight: 300;
-  src:
-    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Lt.woff2)
-      format("woff2"),
-    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Lt.woff)
-      format("woff");
+    font-display: optional;
+    font-family: Netflix Light;
+    font-weight: 300;
+    src:
+        url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Lt.woff2)
+            format('woff2'),
+        url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Lt.woff)
+            format('woff');
 }
 
 @font-face {
-  font-display: optional;
-  font-family: Netflix Sans;
-  font-weight: 400;
-  src:
-    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Rg.woff2)
-      format("woff2"),
-    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Rg.woff)
-      format("woff");
+    font-display: optional;
+    font-family: Netflix Sans;
+    font-weight: 400;
+    src:
+        url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Rg.woff2)
+            format('woff2'),
+        url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Rg.woff)
+            format('woff');
 }
 
 @font-face {
-  font-display: optional;
-  font-family: Netflix Sans;
-  font-weight: 700;
-  src:
-    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Bd.woff2)
-      format("woff2"),
-    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Bd.woff)
-      format("woff");
+    font-display: optional;
+    font-family: Netflix Sans;
+    font-weight: 700;
+    src:
+        url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Bd.woff2)
+            format('woff2'),
+        url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Bd.woff)
+            format('woff');
 }
 
 @font-face {
-  font-display: optional;
-  font-family: Netflix Sans;
-  font-weight: 900;
-  src:
-    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Blk.woff2)
-      format("woff2"),
-    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Blk.woff)
-      format("woff");
+    font-display: optional;
+    font-family: Netflix Sans;
+    font-weight: 900;
+    src:
+        url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Blk.woff2)
+            format('woff2'),
+        url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Blk.woff)
+            format('woff');
 }
 
 @font-face {
-  font-family: "Netflix-Light";
-  src: url("../../public/fonts/Netflix-Light.otf");
+    font-family: 'Netflix-Light';
+    src: url('../../public/fonts/Netflix-Light.otf');
 }
 
 @layer utilities {
-  @variants responsive {
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
+    @variants responsive {
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
 
-    /* Hide scrollbar for IE, Edge and Firefox */
-    .no-scrollbar {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
     }
-  }
 }
 
 @layer components {
-  .reduce-size {
-    transform-origin: left bottom;
-    transform: scale(0.6) translate3d(0px, 160px, 0px);
-    transition-duration: 1000ms;
-    transition-delay: 100ms;
-  }
-  .recover-size {
-    transform-origin: left bottom;
-    transform: scale(1) translate3d(0px, 0px, 0px);
-    transition-duration: 1000ms;
-    transition-delay: 100ms;
-  }
+    .reduce-size {
+        transform-origin: left bottom;
+        transform: scale(0.6) translate3d(0px, 160px, 0px);
+        transition-duration: 1000ms;
+        transition-delay: 100ms;
+    }
+    .recover-size {
+        transform-origin: left bottom;
+        transform: scale(1) translate3d(0px, 0px, 0px);
+        transition-duration: 1000ms;
+        transition-delay: 100ms;
+    }
 }
 
 html {
-  -webkit-font-smoothing: antialiased;
-  letter-spacing: 0 !important;
-  background: #141414;
-  line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0 !important;
+    background: #141414;
+    line-height: 1.2;
 }
 
 img,
 li {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 body {
-  overflow-x: hidden;
+    overflow-x: hidden;
+    font-size: 16px;
 }

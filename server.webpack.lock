@@ -1,0 +1,5 @@
+{
+  "https://d1n9laup924vli.cloudfront.net/intro.mp4": { "integrity": "sha512-s7YvwsLBl3pxbUYhC2nE60Ro1hp/ASgMPBndSsBxaEVUEgMKG3tj80R6/2tEMycWt360PGzbiN+pUwL76+G7Mg==", "contentType": "video/mp4" },
+  "https://netflix-static.s3.us-west-2.amazonaws.com/intro.mp4": { "integrity": "sha512-s7YvwsLBl3pxbUYhC2nE60Ro1hp/ASgMPBndSsBxaEVUEgMKG3tj80R6/2tEMycWt360PGzbiN+pUwL76+G7Mg==", "contentType": "video/mp4" },
+  "version": 1
+}

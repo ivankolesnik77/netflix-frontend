@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from './constants'
-import * as bcrypt from 'bcrypt'
+
 export const setAuthToken = ({
     token,
     isRememberMe,
@@ -17,12 +17,4 @@ export const setAuthToken = ({
 export const clearAuthTokens = () => {
     localStorage.removeItem(ACCESS_TOKEN_KEY)
     sessionStorage.removeItem(ACCESS_TOKEN_KEY)
-}
-
-const saltRounds = 10
-
-async function hashPassword(plainPassword: string): Promise<string> {
-    const salt = await bcrypt.genSalt(saltRounds)
-    const hash = await bcrypt.hash(plainPassword, salt)
-    return hash
 }

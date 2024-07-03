@@ -13,10 +13,16 @@ import { setContext } from '@apollo/client/link/context'
 import { GraphQLError } from 'graphql'
 import { apolloClient } from './apolloClient'
 import { parse } from 'url'
+import { log } from 'console'
+import { redirect } from 'next/navigation'
+import { faL } from '@fortawesome/free-solid-svg-icons'
 
 export const REFRESH_TOKEN = gql`
     mutation refreshTokens {
-        refreshTokens
+        refreshTokens {
+            accessToken
+            error
+        }
     }
 `
 
@@ -40,8 +46,11 @@ const errorLink = onError(
     ({ graphQLErrors, networkError, operation, forward }) => {
         if (graphQLErrors) {
             for (let err of graphQLErrors) {
-                switch (err.extensions?.code) {
+                console.log(err)
+                switch ((err as any).code) {
                     case 'UNAUTHENTICATED':
+                        console.log(1)
+
                         // ignore 401 error for a refresh request
                         if (operation.operationName === 'refreshTokens') return
 
@@ -51,11 +60,11 @@ const errorLink = onError(
                             // used an annonymous function for using an async function
                             ;(async () => {
                                 try {
-                                    const accessToken = await refreshToken()
+                                    const response: any = await refreshToken()
 
-                                    if (!accessToken) {
+                                    if (!response?.accessToken) {
                                         throw new GraphQLError(
-                                            'Empty AccessToken'
+                                            'Refresh token is expired '
                                         )
                                     }
 
@@ -69,6 +78,12 @@ const errorLink = onError(
 
                                     forward(operation).subscribe(subscriber)
                                 } catch (err) {
+                                    if (typeof err == 'object') {
+                                        observer.error({
+                                            ...err,
+                                            isAuth: false,
+                                        })
+                                    }
                                     observer.error(err)
                                 }
                             })()
@@ -86,7 +101,7 @@ const errorLink = onError(
 const protectedRoutes = ['/', '/profile']
 
 const requestLink = new ApolloLink((operation, forward) => {
-    const href = window.location.href.split('localhost:3000').at(-1)
+    const href = window.location.href.split('localhost:3001').at(-1)
     const isProtectedRoute = protectedRoutes.includes(href!)
     const tokenNeedsRefresh = !localStorage.getItem('accessToken')
     const isNotRefreshOperation = operation.operationName !== 'refreshTokens'
@@ -95,7 +110,6 @@ const requestLink = new ApolloLink((operation, forward) => {
         return new ApolloLink((operation) => {
             return new Observable((observer) => {
                 refreshToken().then(() => {
-                    // Retry the original request after refreshing the token
                     const subscriber = forward(operation).subscribe({
                         next: observer.next.bind(observer),
                         error: observer.error.bind(observer),
@@ -121,10 +135,10 @@ const refreshToken = async () => {
             mutation: REFRESH_TOKEN,
         })
 
-        const accessToken = refreshResolverResponse.data?.refreshTokens
-
-        !!accessToken && localStorage.setItem('accessToken', accessToken)
-        return accessToken
+        const response = refreshResolverResponse.data?.refreshTokens
+        const token = (response as any).accessToken
+        !!token && localStorage.setItem('accessToken', token)
+        return response
     } catch (err) {
         console.log(err)
 

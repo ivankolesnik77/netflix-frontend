@@ -11,6 +11,7 @@ const LoginMenu = () => {
                 src="/icons/logo.svg"
                 alt="logo"
                 className="mr-8 md:mr-6 md:w-[120px] "
+                height="auto"
             />
             <button
                 onClick={() => router.push({ pathname: '/login' })}

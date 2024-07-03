@@ -58,7 +58,7 @@ const LoginForm: FC = () => {
             const token = data?.data?.authUser?.user?.accessToken
             if (!!token) {
                 const { accessToken, ...user } = data.data.authUser.user
-                console.log(token)
+
                 localStorage.setItem('accessToken', JSON.stringify(token))
                 dispatch(
                     setUser({ email: user.email, userName: user.userName })

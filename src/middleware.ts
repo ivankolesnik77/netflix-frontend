@@ -5,13 +5,13 @@ export const authRoutes = ['/login']
 
 export function middleware(request: NextRequest) {
     const isAuthenticated = !!request.cookies.get('refreshToken')?.value
-
-    if (
-        !isAuthenticated &&
-        protectedRoutes.includes(request.nextUrl.pathname)
-    ) {
-        return NextResponse.redirect(new URL('/login', request.url))
-    }
+    console.log('isAuthenticated', isAuthenticated)
+    // if (
+    //     !isAuthenticated &&
+    //     protectedRoutes.includes(request.nextUrl.pathname)
+    // ) {
+    //     return NextResponse.redirect(new URL('/login', request.url))
+    // }
 
     // if (authRoutes.includes(request.nextUrl.pathname) && isAuthenticated) {
     //   return NextResponse.redirect(new URL("/", request.url));
