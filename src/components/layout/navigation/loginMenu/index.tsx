@@ -1,6 +1,5 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { setAuth } from '../../../../store/reducers/auth.slice'
+
 import { useRouter } from 'next/router'
 
 const LoginMenu = () => {

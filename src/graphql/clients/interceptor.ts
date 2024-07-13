@@ -16,6 +16,7 @@ import { parse } from 'url'
 import { log } from 'console'
 import { redirect } from 'next/navigation'
 import { faL } from '@fortawesome/free-solid-svg-icons'
+import { ACCESS_TOKEN_KEY } from '@/utils/constants'
 
 export const REFRESH_TOKEN = gql`
     mutation refreshTokens {
@@ -37,7 +38,7 @@ const authLink = setContext((operation, { headers }) => {
     return {
         headers: {
             ...headers,
-            authorization: !!token ? `Bearer ${JSON.parse(token)}` : '',
+            authorization: !!token ? `Bearer ${token}` : '',
         },
     }
 })
@@ -137,7 +138,7 @@ const refreshToken = async () => {
 
         const response = refreshResolverResponse.data?.refreshTokens
         const token = (response as any).accessToken
-        !!token && localStorage.setItem('accessToken', token)
+        !!token && localStorage.setItem(ACCESS_TOKEN_KEY, JSON.stringify(token))
         return response
     } catch (err) {
         console.log(err)

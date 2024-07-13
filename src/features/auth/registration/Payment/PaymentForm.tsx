@@ -7,7 +7,11 @@ import io, { Socket } from 'socket.io-client'
 
 import { useAppSelector } from '@/utils/hooks'
 import { RootState } from '@/store'
-import { cardPaymentOptions, subscriptionRates } from '@/utils/constants'
+import {
+    ACCESS_TOKEN_KEY,
+    cardPaymentOptions,
+    subscriptionRates,
+} from '@/utils/constants'
 import { setAuth } from '@/store/reducers/auth.slice'
 import { IPaySubscription } from './types'
 import DefaultButton from '@/components/layout/buttons/DefaultButton'
@@ -87,7 +91,7 @@ export default function PaymentForm({ clientSecret }: any) {
             } else {
                 dispatch(setAuth(true))
                 localStorage.setItem(
-                    'accessToken',
+                    ACCESS_TOKEN_KEY,
                     data.createSubscription.accessToken
                 )
             }
@@ -148,8 +152,8 @@ export default function PaymentForm({ clientSecret }: any) {
     if (!cart.clientSecret || !stripe) return null
 
     const customfields = [
-        { title: 'Имя', value: name, setValue: setName },
-        { title: 'Фамилия', value: surname, setValue: setSurname },
+        { title: 'Name', value: name, setValue: setName },
+        { title: 'Surname', value: surname, setValue: setSurname },
     ]
 
     return (

@@ -1,6 +1,14 @@
+@import 'fonts.css';
+
 @tailwind base;
-@tailwind components;
 @tailwind utilities;
+@tailwind components;
+
+@layer components {
+    .paragraph {
+        @apply text-[14px] m-[0.5em] ml-0;
+    }
+}
 
 @font-face {
     font-display: optional;
@@ -57,11 +65,6 @@
             format('woff');
 }
 
-@font-face {
-    font-family: 'Netflix-Light';
-    src: url('../../public/fonts/Netflix-Light.otf');
-}
-
 @layer utilities {
     @variants responsive {
         /* Hide scrollbar for Chrome, Safari and Opera */
@@ -106,5 +109,21 @@ li {
 
 body {
     overflow-x: hidden;
-    font-size: 16px;
+    font-size: 14px;
+}
+
+h3 {
+    font-size: 24px;
+}
+
+b,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+optgroup,
+strong {
+    font-weight: 500;
 }

@@ -8,9 +8,9 @@ export const setAuthToken = ({
     isRememberMe?: boolean
 }) => {
     if (isRememberMe) {
-        localStorage.setItem(ACCESS_TOKEN_KEY, token)
+        localStorage.setItem(ACCESS_TOKEN_KEY, JSON.stringify(token))
     } else {
-        sessionStorage.setItem(ACCESS_TOKEN_KEY, token)
+        sessionStorage.setItem(ACCESS_TOKEN_KEY, JSON.stringify(token))
     }
 }
 

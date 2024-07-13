@@ -22,23 +22,15 @@ const config: Config = {
         extend: {
             screens: {
                 sm: '640px',
-                // => @media (min-width: 640px) { ... }
-
                 md: '768px',
-                // => @media (min-width: 768px) { ... }
-
                 lg: '1024px',
-                // => @media (min-width: 1024px) { ... }
-
                 xl: '1280px',
-                // => @media (min-width: 1280px) { ... }
-
                 '2xl': '1536px',
-                // => @media (min-width: 1536px) { ... }
             },
             animation: {
                 fade: 'fadeOut 0.5s ease-in-out',
                 scroll: 'scroll 40s linear infinite',
+                cursorHide: 'cursorHide 0.3s linear easy-in ',
             },
 
             colors: {
@@ -48,6 +40,7 @@ const config: Config = {
                 secondary: '#bcbcbc',
                 black: '#393536',
                 red: '#c82f27',
+                subtitle: '#777',
             },
 
             boxShadow: {
@@ -75,16 +68,34 @@ const config: Config = {
                         opacity: '100%',
                     },
                 },
+                cursorHide: {
+                    '0%': {
+                        cursor: 'pointer',
+                    },
+                    '100%': {
+                        cursor: 'none',
+                    },
+                },
             }),
 
             backgroundImage: {
                 linearGradient:
-                    'linear-gradient(180deg,hsla(0,0%,8%,0) 0,hsla(0,0%,8%,.15) 15%,hsla(0,0%,8%,.35) 29%,hsla(0,0%,8%,.68) 44%,#141414 68%,#141414)',
+                    'linear-gradient(180deg, rgba(20, 20, 20, 0) 0%, rgba(20, 20, 20, 0.15) 15%, rgba(20, 20, 20, 0.35) 29%, rgba(20, 20, 20, 0.68) 44%, rgb(20, 20, 20) 68%, rgb(20, 20, 20) 100%)',
+                previewGradient:
+                    'linear-gradient(0deg,#181818,transparent 50%)',
+                playGradient:
+                    'linear-gradient(195deg, hsla(0, 0%, 9%, .7), hsla(0, 0%, 9%, .5) 10%, transparent 25%)',
                 bannerGradient:
                     "linear-gradient(180deg,hsla(0,0%,8%,0) 0,hsla(0,0%,8%,.15) 15%,hsla(0,0%,8%,.35) 29%,hsla(0,0%,8%,.58) 44%,#141414 68%,#141414), url('/images/main-bg-lg.png')",
             },
+
             fontFamily: {
                 sans: ['var(--font-netflix)'],
+                netflix:
+                    'Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif',
+                nkufi: 'NKufi,Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif',
+                graphikth:
+                    'GraphikTH,Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif',
             },
         },
     },

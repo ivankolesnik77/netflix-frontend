@@ -12,13 +12,19 @@ import StoreProvider from '../../store/StoreProvider'
 import localFont from 'next/font/local'
 import LoginLayout from './LoginLayout'
 import { RootState } from '../../store'
+import { useRouter } from 'next/router'
 
 interface IProps {
     children: React.ReactNode[] | React.ReactNode
 }
 
 const Layout: FC<IProps> = ({ children }) => {
+    const router = useRouter()
     const isAuth = useSelector((state: RootState) => state.auth.isAuth)
+
+    if (router.route.includes('/watch')) {
+        return children
+    }
 
     if (!isAuth) {
         return <LoginLayout>{children}</LoginLayout>

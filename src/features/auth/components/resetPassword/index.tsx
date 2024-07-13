@@ -10,6 +10,7 @@ import DefaultButton from '@/components/layout/buttons/DefaultButton'
 import { RESET_PASSWORD } from '@/graphql/queries/account/resetPassword'
 import { useSearchParams } from 'next/navigation'
 import { useAppSelector } from '@/utils/hooks'
+import { setAuth } from '@/store/reducers/auth.slice'
 
 export type IFormData = {
     password: string
@@ -33,10 +34,10 @@ const ResetPasswordForm: FC = () => {
     })
 
     const [resetPassword] = useMutation(RESET_PASSWORD)
-
+    const dispatch = useDispatch()
     const onSubmit = async (formData: IFormData) => {
         try {
-            const token = searchParams.get('resetPasswordToken') || resetToken
+            const token = searchParams.get('token') || resetToken
             const email = searchParams.get('email') || userEmail
             const data: any = await resetPassword({
                 variables: {
@@ -49,6 +50,7 @@ const ResetPasswordForm: FC = () => {
             })
             const status = data?.data?.resetPassword?.status
             if (!!status) {
+                dispatch(setAuth(false))
                 router.push('/login')
             }
         } catch (err: any) {

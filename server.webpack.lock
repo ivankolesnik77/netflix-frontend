@@ -1,5 +1,6 @@
 {
   "https://d1n9laup924vli.cloudfront.net/intro.mp4": { "integrity": "sha512-s7YvwsLBl3pxbUYhC2nE60Ro1hp/ASgMPBndSsBxaEVUEgMKG3tj80R6/2tEMycWt360PGzbiN+pUwL76+G7Mg==", "contentType": "video/mp4" },
+  "https://netflix-static.s3.us-west-2.amazonaws.com/devilInOhio/season1/%D0%93%D0%BE%D0%BB%D0%BE%D0%B2%D0%BE%D0%BB%D0%BE%D0%BC%D0%BA%D0%B0.mp4": { "integrity": "sha512-HY3k+FtWguPxtlJVzQU5E8QMbqE05N8/wurVLGUP4jb/VZ02kGwPhNiRy8wcIrHabsQ+s/hxW52Q58n3E1vNgw==", "contentType": "video/mp4" },
   "https://netflix-static.s3.us-west-2.amazonaws.com/intro.mp4": { "integrity": "sha512-s7YvwsLBl3pxbUYhC2nE60Ro1hp/ASgMPBndSsBxaEVUEgMKG3tj80R6/2tEMycWt360PGzbiN+pUwL76+G7Mg==", "contentType": "video/mp4" },
   "version": 1
 }

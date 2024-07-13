@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React, { FC, useState } from 'react'
 
 import { useTimer } from '../../../utils/hooks'
-import { DefaultCarousel } from '@/components/layout/Carousel'
+import { DefaultCarousel } from '@/components/layout/carousel'
 
 interface IProps {
     items: any[]
@@ -26,11 +26,10 @@ const Popular: FC<IProps> = ({ items }) => {
             <div>
                 <DefaultCarousel isUpdate={isUpdate}>
                     {items.map((item, key) => (
-                        <Link
+                        <div
                             onMouseLeave={handleMouseLeave}
                             onMouseDown={handleMouseDown}
                             key={'carousel-item-' + item.title}
-                            href={item.href}
                             className="w-[240px]"
                         >
                             <img
@@ -39,7 +38,7 @@ const Popular: FC<IProps> = ({ items }) => {
                                 width={280}
                                 className="rounded-sm"
                             />
-                        </Link>
+                        </div>
                     ))}
                 </DefaultCarousel>
             </div>

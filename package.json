@@ -25,6 +25,7 @@
         "@rtk-query/graphql-request-base-query": "^2.2.0",
         "@stripe/react-stripe-js": "^2.4.0",
         "@types/bcryptjs": "^2.4.6",
+        "@types/classnames": "^2.3.1",
         "@types/js-cookie": "^3.0.6",
         "@types/react-relay": "^16.0.6",
         "@types/react-stripe-elements": "^6.0.9",
@@ -51,6 +52,7 @@
         "relay-compiler": "^16.2.0",
         "socket.io": "^4.7.4",
         "socket.io-client": "^4.7.4",
+        "tailwindcss": "^3.4.3",
         "yup": "^1.4.0",
         "zustand": "^4.4.7"
     },
@@ -61,18 +63,18 @@
         "@svgr/webpack": "^8.1.0",
         "@types/lodash": "^4.14.202",
         "@types/node": "^20",
-        "@types/react": "^18",
+        "@types/react": "^18.3.3",
         "@types/react-dom": "^18",
         "@types/relay-runtime": "^14.1.23",
-        "autoprefixer": "^10.0.1",
+        "autoprefixer": "^10.4.19",
+        "babel-plugin-inline-react-svg": "^2.0.2",
         "daisyui": "^4.10.1",
         "eslint": "^8",
         "eslint-config-next": "14.0.4",
         "next-images": "^1.8.5",
-        "postcss": "^8",
+        "postcss": "^8.4.39",
         "prettier": "^3.1.1",
         "prettier-plugin-tailwindcss": "^0.5.9",
-        "tailwindcss": "^3.3.0",
         "typescript": "^5"
     }
 }

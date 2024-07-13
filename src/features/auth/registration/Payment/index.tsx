@@ -23,11 +23,15 @@ const Payment: FC<{
 
     useEffect(() => {
         const getRequestPaymentIntent = async () => {
-            const paymentIntent: any = await createPaymentIntent()
+            try {
+                const paymentIntent: any = await createPaymentIntent()
 
-            const clientSecret = paymentIntent.data.paymentIntent.clientSecret
-            console.log(clientSecret)
-            dispatch(setPaymentCredentials({ clientSecret }))
+                const clientSecret =
+                    paymentIntent.data.createPaymentIntent.clientSecret
+                dispatch(setPaymentCredentials({ clientSecret }))
+            } catch (err) {
+                console.log(err)
+            }
         }
 
         getRequestPaymentIntent()
@@ -38,17 +42,17 @@ const Payment: FC<{
             <div className="mt-[20px]" data-uia="header">
                 <div className="stepHeader" role="status">
                     <span id="" className="text-xs" data-uia="">
-                        ШАГ 3 ИЗ 3
+                        Step 3 of 3
                     </span>
                     <h1 className="text-3xl" data-uia="stepTitle">
-                        Мы принимаем Visa, Mastercard и American Express.
+                        We accept Visa, Mastercard and American Express.
                     </h1>
                 </div>
             </div>
             <div>
                 <span
                     className="my-3 flex gap-2"
-                    aria-label="Мы принимаем Visa, Mastercard и American Express."
+                    aria-label="We accept Visa, Mastercard and American Express."
                 >
                     <Image
                         src={
@@ -78,14 +82,13 @@ const Payment: FC<{
             <PaymentFormWrapper />
             <small>
                 <span className="mt-3 text-gray-500">
-                    Устанавливая флажок ниже, вы соглашаетесь с Правилами
-                    использования и Положением о конфиденциальности, а также
-                    подтверждаете, что вам есть 18 лет/год. Netflix будет
-                    автоматически продлевать вашу подписку и взимать плату за
-                    нее (в настоящее время 9,99 €/месяц), используя указанный
-                    вами способ оплаты, пока вы не отмените подписку. Отменить
-                    подписку можно в любой момент, и плата больше взиматься не
-                    будет.
+                    By checking the box below, you agree to the Rules use and
+                    Privacy Statement, as well as confirm that you are over 18
+                    years of age/year. Netflix will automatically renew your
+                    subscription and charge you for her (currently 9.99
+                    €/month), using the indicated your payment method until you
+                    cancel your subscription. Cancel You can subscribe at any
+                    time and there are no further fees will.
                 </span>
             </small>
         </div>

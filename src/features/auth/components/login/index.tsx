@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import DefaultButton from '@/components/layout/buttons/DefaultButton'
 import { setUser } from '@/store/reducers/user.slice'
+import { ACCESS_TOKEN_KEY } from '@/utils/constants'
 
 export type AuthDataType = {
     password: string
@@ -59,7 +60,7 @@ const LoginForm: FC = () => {
             if (!!token) {
                 const { accessToken, ...user } = data.data.authUser.user
 
-                localStorage.setItem('accessToken', JSON.stringify(token))
+                localStorage.setItem(ACCESS_TOKEN_KEY, JSON.stringify(token))
                 dispatch(
                     setUser({ email: user.email, userName: user.userName })
                 )
@@ -87,7 +88,7 @@ const LoginForm: FC = () => {
                 <div className="mt-[20px]" data-uia="header">
                     <div className="stepHeader" role="status">
                         <h2
-                            className="text-center text-3xl text-black"
+                            className="text-center text-[30px] text-black"
                             data-uia="stepTitle"
                         >
                             Login
@@ -104,7 +105,7 @@ const LoginForm: FC = () => {
                                 <div>
                                     <label
                                         htmlFor="email"
-                                        className=" mb-2 block text-sm text-black"
+                                        className=" mb-2 block text-[14px] text-black"
                                     >
                                         Адресс электронной почты
                                     </label>
@@ -125,7 +126,7 @@ const LoginForm: FC = () => {
                                     <div className="mb-2 flex justify-between">
                                         <label
                                             htmlFor="password"
-                                            className="text-sm text-black"
+                                            className="text-[14px] text-black"
                                         >
                                             Пароль
                                         </label>
@@ -144,21 +145,21 @@ const LoginForm: FC = () => {
                                     <Link
                                         rel="noopener noreferrer"
                                         href="#"
-                                        className="text-md  text-blue-600 hover:underline"
+                                        className="text-[14px]  text-blue-600 hover:underline"
                                     >
                                         Forgot a password?
                                     </Link>
                                     <Link
                                         rel="noopener noreferrer"
                                         href="/register"
-                                        className="text-md  text-blue-600 hover:underline"
+                                        className="text-[14px]  text-blue-600 hover:underline"
                                     >
                                         {"Don't have an account?"}
                                     </Link>
                                 </div>
                             </div>
                             {error && (
-                                <span className="text-small my-3 text-red">
+                                <span className="text-[12px] my-3 text-red">
                                     {error.message}
                                 </span>
                             )}
@@ -167,7 +168,7 @@ const LoginForm: FC = () => {
                                     <DefaultButton
                                         type="submit"
                                         value="Войти"
-                                        className="bg-red-600 w-full rounded-md px-8 py-3 font-semibold text-white"
+                                        className="bg-red-600 text-3xl w-full rounded-md px-8 py-3 font-semibold text-white"
                                     ></DefaultButton>
                                 </div>
                             </div>

@@ -1,4 +1,4 @@
-import { IUserSliceState } from '../../../../store/reducers/redux.slice'
+import { IUserSliceState } from '@/store/reducers/user.slice'
 
 export interface IPaySubscription {
     currentUser: IUserSliceState

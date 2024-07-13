@@ -6,32 +6,32 @@ import { useDispatch } from 'react-redux'
 import { gql } from '@apollo/client'
 import DefaultButton from '@/components/layout/buttons/DefaultButton'
 const planOptions = [
-    'Неограниченный просмотр. Без рекламы.',
-    'Персональные рекомендации.',
-    'Возможность перейти на другой план или отменить подписку в любое время.',
+    'Unlimited viewing. Without advertising.',
+    'Personal recommendations.',
+    'Ability to switch to another plan or cancel your subscription at any time.',
 ]
 
 enum TABLE_ROWS {
-    MonthlyPrice = 'Стоимость за месяц',
-    Quality = 'Качество',
-    Resolution = 'Разрешение',
-    AccessOthersDevices = 'Просмотр на телевизоре, компьютере, телефоне и планшете',
+    MonthlyPrice = 'Price per month',
+    Quality = 'Quality',
+    Resolution = 'Resolution',
+    AccessOthersDevices = 'View on TV, computer, phone and tablet',
 }
 
 const paymentTableRows: PaymentTableRow[] = [
     {
         monthlyPrice: '4.99',
-        quality: 'Хорошее',
+        quality: 'Good',
         resolution: 720,
     },
     {
         monthlyPrice: '7.49',
-        quality: 'Очень хорошее',
+        quality: 'Very good',
         resolution: 1080,
     },
     {
         monthlyPrice: '9.99',
-        quality: 'Лучшее',
+        quality: 'Best',
         resolution: '4K',
     },
 ]
@@ -77,10 +77,10 @@ const ChoosePlan: FC<{
                     <div className="stepHeader-container" data-uia="header">
                         <div className="stepHeader" role="status">
                             <span id="" className="text-xs" data-uia="">
-                                ШАГ <b>2</b> ИЗ <b>3</b>
+                                Step <b>2</b> of <b>3</b>
                             </span>
                             <h1 className="text-3xl" data-uia="stepTitle">
-                                Выберите подходящий план
+                                Choose the plan that suits you
                             </h1>
                         </div>
                     </div>
@@ -224,27 +224,28 @@ const ChoosePlan: FC<{
                     <div className="text-[#737373]">
                         <small className="block">
                             <span id="" data-uia="plan-grid-legal">
-                                Доступность форматов HD (720p), Full HD (1080p),
-                                UltraHD (4K) и HDR зависит от вашего подключения
-                                к интернету и возможностей устройства. Не весь
-                                контент доступен во всех разрешениях.
-                                Подробности приведены в
+                                Availability of HD (720p), Full HD (1080p),
+                                UltraHD (4K) and HDR depends on your connection
+                                to the Internet and device capabilities. Not all
+                                content is available in all resolutions. Details
+                                are given in
                                 <a
                                     href="https://help.netflix.com/legal/termsofuse"
                                     target="_blank"
                                     className="ml-1 text-[#0071eb]"
                                 >
-                                    Правилах использования
+                                    Terms of use
                                 </a>
                                 .
                             </span>
                         </small>
                         <small className="mt-[10px] block">
                             <span id="" data-uia="plan-grid-legal">
-                                Вашим аккаунтом могут пользоваться только те,
-                                кто живет с вами. Смотрите Netflix одновременно
-                                на 4 разных устройствах с планом Премиум, на 2 —
-                                со Стандартным планом и на 1 — с Базовым.
+                                Your account can only be used by those who lives
+                                with you. Watch Netflix at the same time on 4
+                                different devices with a Premium plan, on 2 -
+                                with the Standard plan and 1 with the Basic
+                                plan.
                             </span>
                         </small>
                     </div>
@@ -256,7 +257,7 @@ const ChoosePlan: FC<{
                                 Object.values(SubscriptionType)[activePlanIndex]
                             )
                         }
-                        className="w-full rounded-md px-8 py-3"
+                        className="w-full rounded-md px-8 py-3 mt-3"
                     />
                 </div>
             </div>

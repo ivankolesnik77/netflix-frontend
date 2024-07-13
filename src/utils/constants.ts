@@ -1,4 +1,29 @@
 import { SubscriptionType } from '../store/reducers/redux.slice'
+import backIcon from '/public/icons/back.svg'
+import passTimeBackIcon from '/public/icons/passTimeBack.svg'
+import passTimeForwardIcon from '/public/icons/passTimeForward.svg'
+import soundIcon from '/public/icons/sound.svg'
+import reportIcon from '/public/icons/report.svg'
+import playIcon from '/public/icons/play.svg'
+import nextEpisodeIcon from '/public/icons/nextEpisode.svg'
+import subtitlesIcon from '/public/icons/subtitles.svg'
+import seriesIcon from '/public/icons/series.svg'
+import speedIcon from '/public/icons/speed.svg'
+import fullScreenIcon from '/public/icons/fullScreen.svg'
+
+export const icons = {
+    sound: soundIcon,
+    report: reportIcon,
+    passTimeBack: passTimeBackIcon,
+    passTimeForward: passTimeForwardIcon,
+    play: playIcon,
+    back: backIcon,
+    nextEpisode: nextEpisodeIcon,
+    subtitles: subtitlesIcon,
+    series: seriesIcon,
+    speed: speedIcon,
+    fullScreen: fullScreenIcon,
+}
 
 export const menuItems = [
     {

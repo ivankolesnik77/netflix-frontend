@@ -5,10 +5,17 @@ import { gql, useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useAppSelector } from '@/utils/hooks'
+import { useDispatch } from 'react-redux'
+import { setAuth } from '@/store/reducers/auth.slice'
 
 const Profile = () => {
+    const dispatch = useDispatch()
     const user = useAppSelector((state) => state.user)
     const [isTooltip, setIsTooltip] = useState(false)
+
+    const logout = () => {
+        dispatch(setAuth(false))
+    }
 
     return (
         <div className="bg-[#f2f2f2]">
@@ -107,7 +114,9 @@ const Profile = () => {
                             <a href="">NEW Manage access and devices</a>
                         </div>
                         <div className="flex justify-end">
-                            <a href="">Sign out of all devices</a>
+                            <button onClick={logout}>
+                                Sign out of all devices
+                            </button>
                         </div>
                         <div className="flex justify-end">
                             <a href="">Download your personal information</a>

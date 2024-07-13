@@ -1,26 +1,72 @@
-import dynamic from "next/dynamic";
+import dynamic from 'next/dynamic'
 
-const Home = dynamic(() => import("../components/home"), {
-  ssr: false, 
-});
+const Home = dynamic(() => import('../components/home'), {
+    ssr: false,
+})
 
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import StoreProvider from '../store/StoreProvider'
+import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev'
+import { useEffect } from 'react'
+import { useAppSelector } from '@/utils/hooks'
+import { ACCESS_TOKEN_KEY } from '@/utils/constants'
+import React from 'react'
 
-import StoreProvider from "../store/StoreProvider";
-import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+loadDevMessages()
+loadErrorMessages()
 
-export const apolloClient = new ApolloClient({
-  uri: "http://localhost:3002/graphql/",
-  cache: new InMemoryCache(),
-});
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
+import { apolloClient } from '@/graphql/clients/apolloClient'
+import { gql } from '@/__generated__'
+import { IntroMovieQuery, MoviesStringQuery } from '@/graphql/queries/movies'
 
-loadDevMessages();
-loadErrorMessages();
+type Repo = {
+    name: string
+    stargazers_count: number
+}
 
-export default function HomePage(props: any) {
-  return (
-    <StoreProvider>
-      <Home />
-    </StoreProvider>
-  );
+export const getServerSideProps = async () => {
+    try {
+        // const api = process.env.SERVER_API
+
+        const response = await fetch('http://localhost:3000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Add any other headers you need, such as authorization headers
+            },
+            body: JSON.stringify({
+                query: MoviesStringQuery,
+            }),
+        })
+
+        const result = await response.json()
+
+        return {
+            props: {
+                data: result?.data.movies,
+            },
+        }
+    } catch (err) {
+        console.log(err)
+        return {
+            props: {
+                data: {},
+            },
+        }
+    }
+}
+
+export default function HomePage({ data }: any) {
+    const isAuth = useAppSelector((state) => state.auth.isAuth)
+    useEffect(() => {
+        if (isAuth == false) {
+            localStorage.removeItem(ACCESS_TOKEN_KEY)
+        }
+    }, [isAuth])
+
+    return (
+        <StoreProvider>
+            <Home introMovie={data} />
+        </StoreProvider>
+    )
 }
